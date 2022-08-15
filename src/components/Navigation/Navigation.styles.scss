@@ -1,0 +1,28 @@
+.sidebar {
+    background-color: #101a34;
+    width: 20%;
+
+    .logo {
+        background-color: #192444;
+        color: #fff;
+        padding: 1rem 2rem;
+        font-size: 1.5rem;
+        font-weight: bold;
+        letter-spacing: 2px;
+    }
+
+    &__nav {
+        a {
+            color: #81899f;
+            width: 100%;
+            display: flex;
+            padding: 1rem 2rem;
+            transition: all 0.15s ease-in-out;
+
+            &:hover {
+                color: #fff;
+                background-color: #122039;
+            }
+        }
+    }
+}
