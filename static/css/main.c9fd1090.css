@@ -1,0 +1,2 @@
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:Lato,sans-serif}.app{display:flex;min-height:100vh}ul{list-style-type:none}a{text-decoration:none}.sidebar{background-color:#101a34;width:20%}.sidebar .logo{background-color:#192444;color:#fff;font-size:1.5rem;font-weight:700;letter-spacing:2px;padding:1rem 2rem}.sidebar__nav a{color:#81899f;display:flex;padding:1rem 2rem;transition:all .15s ease-in-out;width:100%}.sidebar__nav a:hover{background-color:#122039;color:#fff}.home{width:80%}
+/*# sourceMappingURL=main.c9fd1090.css.map*/
