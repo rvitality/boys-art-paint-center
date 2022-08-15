@@ -12,10 +12,10 @@ const Home = () => {
     return (
         <div className="home">
             <Routes>
-                <Route path="/brands" element={<Brands />} />
-                <Route path="/categories" element={<Categories />} />
-                <Route path="/products" element={<Products />} />
-                <Route path="/orders" element={<Orders />} />
+                <Route path="brands" element={<Brands />} />
+                <Route path="categories" element={<Categories />} />
+                <Route path="products" element={<Products />} />
+                <Route path="orders" element={<Orders />} />
             </Routes>
         </div>
     );
