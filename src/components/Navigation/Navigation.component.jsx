@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Link, Outlet } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import "./Navigation.styles.scss";
 
@@ -8,9 +8,6 @@ const Navigation = () => {
     return (
         <>
             <aside className="sidebar">
-                <div className="logo">
-                    <Link to="/">LOGO</Link>
-                </div>
                 <nav className="sidebar__nav">
                     <ul>
                         <li>
@@ -28,7 +25,6 @@ const Navigation = () => {
                     </ul>
                 </nav>
             </aside>
-            <Outlet />
         </>
     );
 };

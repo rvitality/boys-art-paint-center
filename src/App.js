@@ -1,28 +1,38 @@
 import React from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
 
-import { Routes, Route } from "react-router-dom";
+import Layout from "./components/Layout/Layout.component";
 
-import Navigation from "./components/Navigation/Navigation.component";
+import Profile from "./routes/Profile/Profile.route";
+import Auth from "./routes/Auth/Auth.route";
 import Home from "./routes/Home/Home.route";
+import { useAuthContext } from "./store/auth-context";
 
 const App = () => {
+    const authContext = useAuthContext();
+
     return (
-        <main className="app">
+        <Layout>
             <Routes>
-                <Route path="/boys-art-paint-center-delivery" element={<Navigation />}>
-                    <Route index path="/boys-art-paint-center-delivery/*" element={<Home />} />
-                </Route>
+                {/* <Route path="/boys-art-paint-center-delivery" element={<Header />}>
+                </Route> */}
+                <Route
+                    path="/boys-art-paint-center-delivery"
+                    element={authContext.isLoggedIn ? <Profile /> : <Navigate to="auth" />}
+                />
+
+                <Route path="/boys-art-paint-center-delivery/info/*" element={<Home />} />
+                <Route path="/boys-art-paint-center-delivery/auth" element={<Auth />} />
                 <Route
                     path="*"
                     element={
                         <>
-                            <Navigation />
                             <p>There is nothing here!</p>
                         </>
                     }
                 />
             </Routes>
-        </main>
+        </Layout>
     );
 };
 

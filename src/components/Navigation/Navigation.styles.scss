@@ -1,19 +1,13 @@
 .sidebar {
-    background-color: #101a34;
+    border-top: 2px solid #000;
+    background-color: rgb(16, 26, 52, 0.96);
     width: 20%;
-
-    .logo {
-        background-color: #192444;
-        color: #fff;
-        padding: 1rem 2rem;
-        font-size: 1.5rem;
-        font-weight: bold;
-        letter-spacing: 2px;
-    }
+    min-height: 100vh;
+    position: relative;
 
     &__nav {
         a {
-            color: #81899f;
+            color: #b2b9cb;
             width: 100%;
             display: flex;
             padding: 1rem 2rem;

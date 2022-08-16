@@ -1,5 +1,7 @@
 import { initializeApp } from "firebase/app";
 
+import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
+
 import {
     getFirestore,
     doc,
@@ -24,6 +26,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
+export const auth = getAuth();
 
 export const db = getFirestore();
 
@@ -35,3 +38,11 @@ export const getDataAndDocuments = async collectionName => {
 
     return querySnapshot.docs.map(docSnapshot => docSnapshot.data());
 };
+
+export const signInAuthWithEmailAndPassword = async (email, password) => {
+    if (!email || !password) return;
+
+    return await signInWithEmailAndPassword(auth, email, password);
+};
+
+export const signOutUser = async () => await signOut(auth);
