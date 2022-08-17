@@ -1,0 +1,58 @@
+.overview {
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 4rem;
+    }
+
+    .card {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        background-color: #fff;
+        padding: 2rem 3rem;
+
+        &__icon-container {
+            background-color: #f76e78;
+            border-radius: 50%;
+            padding: 2rem;
+
+            &.customers {
+                background-color: #6b69fa;
+            }
+
+            &.sales {
+                background-color: #6ad1fc;
+            }
+
+            &.products {
+                background-color: #fe70ff;
+            }
+        }
+
+        &__icon {
+            color: #fff;
+            width: 4rem;
+            height: 4rem;
+        }
+
+        &__texts {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        &__value {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        &__label {
+            color: #555;
+            font-size: 1.35rem;
+            letter-spacing: 1px;
+        }
+    }
+}

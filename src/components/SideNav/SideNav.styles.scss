@@ -1,0 +1,67 @@
+.sidebar {
+    width: 25%;
+    min-height: 100vh;
+    position: relative;
+
+    .logo {
+        font-family: "Aboreto", cursive;
+        font-size: 1.7rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 2rem;
+        filter: brightness(0.8);
+        transition: filter 0.15s ease-in-out;
+
+        &__link {
+            color: #287cc0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        &__icon {
+            width: 5rem;
+            height: 5rem;
+            margin-right: 1rem;
+        }
+
+        &__value {
+            font-weight: bold;
+        }
+
+        &:hover {
+            filter: brightness(1);
+        }
+    }
+
+    .nav {
+        margin-top: 20%;
+        &__link {
+            color: #8e929d;
+            width: 100%;
+            display: flex;
+            padding: 2rem;
+            padding-left: 25%;
+            transition: all 0.15s ease-in-out;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            transition: all 0.15s ease-in-out;
+
+            &:hover {
+                color: #287cc0;
+                background-color: #e6f4ff;
+                border-left: 3px solid #287cc0;
+            }
+        }
+
+        &__link-icon {
+            width: 2.15rem;
+            height: 2.15rem;
+        }
+        &__link-value {
+        }
+    }
+}

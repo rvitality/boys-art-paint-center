@@ -8,7 +8,6 @@ const Categories = () => {
     useEffect(() => {
         const fetchData = async () => {
             const res = await getDataAndDocuments("categories");
-            console.log(res);
             setCategories(res);
         };
 

@@ -1,16 +1,35 @@
-* {
-    box-sizing: border-box;
+@use "./styles/mixins.scss" as *;
+
+*,
+*::after,
+*::before {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 62.5%;
+
+    @include respond(tab-land) {
+        // width < 1200?
+        font-size: 75%;
+    }
+
+    @include respond(tab-port) {
+        // width < 900?
+        font-size: 60%;
+    }
+
+    @include respond(phone) {
+        font-size: 50%;
+    }
 }
 
 body {
     font-family: "Lato", sans-serif;
-}
-
-.app {
-    display: flex;
-    min-height: 100vh;
+    font-size: 1.65rem;
 }
 
 ul {

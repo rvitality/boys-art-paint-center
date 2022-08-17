@@ -5,6 +5,8 @@ import { BrowserRouter } from "react-router-dom";
 import { AuthContextProvider } from "./store/auth-context";
 
 import "./index.scss";
+import "./styles/typography.scss";
+
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 

@@ -1,8 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../store/auth-context";
 
 import { signInAuthWithEmailAndPassword } from "../../utils/firebase/firebase.utils";
+
+import { signOutUser } from "../../utils/firebase/firebase.utils";
 
 import "./Auth.styles.scss";
 
@@ -40,10 +42,13 @@ const Auth = () => {
 
                 if (!users) return;
 
-                if (users[uid].role.toLowerCase() === "admin") {
-                    navigate("/boys-art-paint-center-delivery/info");
+                if (users[uid]?.role.toLowerCase() === "admin") {
+                    authContext.login(users[uid]);
+                    navigate("/boys-art-paint-center-delivery/overview");
                 } else {
-                    navigate("/boys-art-paint-center-delivery");
+                    // navigate("/boys-art-paint-center-delivery");
+                    await signOutUser();
+                    alert("Unauthorized access.");
                 }
             } catch (err) {
                 setError(err.message);
@@ -60,8 +65,6 @@ const Auth = () => {
                     enteredEmail,
                     enteredPassword
                 );
-
-                authContext.login(response.user);
 
                 await fetchUsers(response._tokenResponse.idToken, response.user.uid);
 
@@ -89,13 +92,19 @@ const Auth = () => {
                     <label htmlFor="email" className="form-control__label">
                         Email
                     </label>
-                    <input type="email" ref={emailRef} id="email" required />
+                    <input
+                        type="email"
+                        ref={emailRef}
+                        id="email"
+                        required
+                        defaultValue="boysartenterprises@gmail.com"
+                    />
                 </div>
                 <div className="form-control">
                     <label htmlFor="password" className="form-control__label">
                         Password
                     </label>
-                    <input type="password" ref={passRef} id="password" />
+                    <input type="password" ref={passRef} id="password" defaultValue="qwerty09" />
                 </div>
                 <div className="auth__error"></div>
                 <div className="auth__actions">
@@ -108,7 +117,7 @@ const Auth = () => {
                     )}
                     {isLoading ? (
                         <p style={{ color: "#fff" }}>
-                            <em>Sending request...</em>
+                            <em>Please wait...</em>
                         </p>
                     ) : (
                         <button type="submit">Log In</button>
