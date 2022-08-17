@@ -21,7 +21,16 @@ const App = () => {
                     element={authContext.isLoggedIn ? <Profile /> : <Navigate to="auth" />}
                 />
 
-                <Route path="/boys-art-paint-center-delivery/info/*" element={<Home />} />
+                <Route
+                    path="/boys-art-paint-center-delivery/info/*"
+                    element={
+                        authContext.isLoggedIn ? (
+                            <Home />
+                        ) : (
+                            <Navigate to="/boys-art-paint-center-delivery/auth" />
+                        )
+                    }
+                />
                 <Route path="/boys-art-paint-center-delivery/auth" element={<Auth />} />
                 <Route
                     path="*"

@@ -17,18 +17,6 @@ const Auth = () => {
 
     const navigate = useNavigate();
 
-    // useEffect(() => {
-    //     const fetchUsers = async () => {
-    //         const response = await fetch("https://kokopipdelivery.firebaseio.com/users.json");
-    //         console.log(response);
-
-    //         const data = await response.json();
-    //         console.log(data);
-    //     };
-
-    //     fetchUsers();
-    // }, []);
-
     const loginHandler = e => {
         e.preventDefault();
 
@@ -38,20 +26,55 @@ const Auth = () => {
         const enteredEmail = emailRef.current.value;
         const enteredPassword = passRef.current.value;
 
+        const fetchUsers = async (token, uid) => {
+            try {
+                const response = await fetch(
+                    `https://kokopipdelivery.firebaseio.com/users.json?auth=${token}`
+                );
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch users.");
+                }
+
+                const users = await response.json();
+
+                if (!users) return;
+
+                if (users[uid].role.toLowerCase() === "admin") {
+                    navigate("/boys-art-paint-center-delivery/info");
+                } else {
+                    navigate("/boys-art-paint-center-delivery");
+                }
+            } catch (err) {
+                setError(err.message);
+                setIsLoading(false);
+            }
+        };
+
         const sendRequest = async () => {
             try {
+                setIsLoading(true);
+                setError("");
+
                 const response = await signInAuthWithEmailAndPassword(
                     enteredEmail,
                     enteredPassword
                 );
 
-                console.log(response);
-
                 authContext.login(response.user);
-                navigate("/boys-art-paint-center-delivery/info");
+
+                await fetchUsers(response._tokenResponse.idToken, response.user.uid);
+
+                setIsLoading(false);
+
+                // check if user is admin
             } catch (err) {
-                console.log(err.message);
+                if (err.message.includes("wrong-password")) {
+                    err.message = "Wrong credentials.";
+                }
+
                 setError(err.message);
+                setIsLoading(false);
             }
         };
 
@@ -74,8 +97,22 @@ const Auth = () => {
                     </label>
                     <input type="password" ref={passRef} id="password" />
                 </div>
+                <div className="auth__error"></div>
                 <div className="auth__actions">
-                    <button type="submit">Login</button>
+                    {error && (
+                        <small
+                            style={{ color: "orange", fontStyle: "italic", marginBottom: "1rem" }}
+                        >
+                            {error}
+                        </small>
+                    )}
+                    {isLoading ? (
+                        <p style={{ color: "#fff" }}>
+                            <em>Sending request...</em>
+                        </p>
+                    ) : (
+                        <button type="submit">Log In</button>
+                    )}
                 </div>
             </form>
         </section>

@@ -8,7 +8,6 @@ const Orders = () => {
     useEffect(() => {
         const fetchData = async () => {
             const res = await getDataAndDocuments("orders");
-            console.log(res);
             setOrders(res);
         };
 
