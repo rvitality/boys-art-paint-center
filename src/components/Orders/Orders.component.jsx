@@ -1,25 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 
 import { getDataAndDocuments } from "../../utils/firebase/firebase.utils";
 
+import { useInfoContext } from "../../store/info-context";
+
 const Orders = () => {
-    const [orders, setOrders] = useState([]);
+    const { orders } = useInfoContext();
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchOrders = async () => {
             const res = await getDataAndDocuments("orders");
-            setOrders(res);
+            orders.setOrders(res);
         };
 
-        fetchData();
-    }, []);
+        if (orders.data.length === 0) {
+            fetchOrders();
+        }
+    }, [orders]);
     return (
         <div>
             <h2>Orders</h2>
             <br />
             <hr />
             <br />
-            {orders.map((order, index) => {
+            {orders.data.map((order, index) => {
                 const { email, firstName, fullName, lastName, phoneNumber, role } =
                     order.customerInfo;
 

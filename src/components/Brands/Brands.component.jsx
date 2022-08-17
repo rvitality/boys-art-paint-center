@@ -1,18 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
+import { useInfoContext } from "../../store/info-context";
 
 import { getDataAndDocuments } from "../../utils/firebase/firebase.utils";
 
 const Brands = () => {
-    const [brands, setBrands] = useState([]);
+    const { brands } = useInfoContext();
 
     useEffect(() => {
         const fetchBrands = async () => {
             const res = await getDataAndDocuments("brands");
-            setBrands(res);
+            brands.setBrands(res);
         };
 
-        fetchBrands();
-    }, []);
+        if (brands.data.length === 0) {
+            console.log("fetch");
+
+            fetchBrands();
+        }
+    }, [brands]);
     return (
         <div>
             <h2>Brands</h2>
@@ -20,7 +25,7 @@ const Brands = () => {
             <hr />
             <br />
             <ul>
-                {brands.map((brand, index) => (
+                {brands.data.map((brand, index) => (
                     <li key={`${brand}_${index}`}>{brand.brandName}</li>
                 ))}
             </ul>

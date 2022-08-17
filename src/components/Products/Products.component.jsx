@@ -1,25 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 
 import { getDataAndDocuments } from "../../utils/firebase/firebase.utils";
 
+import { useInfoContext } from "../../store/info-context";
+
 const Products = () => {
-    const [products, setProducts] = useState([]);
+    const { products } = useInfoContext();
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchProducts = async () => {
             const res = await getDataAndDocuments("products");
-            setProducts(res);
+            products.setProducts(res);
         };
 
-        fetchData();
-    }, []);
+        if (products.data.length === 0) {
+            fetchProducts();
+        }
+    }, [products]);
+
     return (
         <div>
             <h2>Products</h2>
             <br />
             <hr />
             <br />
-            {products.map((product, index) => (
+            {products.data.map((product, index) => (
                 <div
                     style={{ border: "2px solid #000", padding: "2rem" }}
                     key={`${product}_${index}`}

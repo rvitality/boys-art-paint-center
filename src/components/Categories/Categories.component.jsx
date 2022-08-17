@@ -2,17 +2,21 @@ import React, { useState, useEffect } from "react";
 
 import { getDataAndDocuments } from "../../utils/firebase/firebase.utils";
 
+import { useInfoContext } from "../../store/info-context";
+
 const Categories = () => {
-    const [categories, setCategories] = useState([]);
+    const { categories } = useInfoContext();
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchCategories = async () => {
             const res = await getDataAndDocuments("categories");
-            setCategories(res);
+            categories.setCategories(res);
         };
 
-        fetchData();
-    }, []);
+        if (categories.data.length === 0) {
+            fetchCategories();
+        }
+    }, [categories]);
     return (
         <div>
             <h2>Categories</h2>
@@ -20,7 +24,7 @@ const Categories = () => {
             <hr />
             <br />
             <ul>
-                {categories.map((category, index) => (
+                {categories.data.map((category, index) => (
                     <li key={`${category}_${index}`}>{category.categoryName}</li>
                 ))}
             </ul>

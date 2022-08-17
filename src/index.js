@@ -9,13 +9,16 @@ import "./styles/typography.scss";
 
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import { InfoContextProvider } from "./store/info-context";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     <React.StrictMode>
         <BrowserRouter>
             <AuthContextProvider>
-                <App />
+                <InfoContextProvider>
+                    <App />
+                </InfoContextProvider>
             </AuthContextProvider>
         </BrowserRouter>
     </React.StrictMode>

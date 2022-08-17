@@ -13,7 +13,7 @@ export const AuthContextProvider = props => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const loginHandler = user => {
-        const { uid, email, phoneNumber } = user;
+        // const { uid, email, phoneNumber } = user;
         setUser(user);
         setIsLoggedIn(true);
     };
