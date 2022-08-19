@@ -17,7 +17,7 @@ const SideNav = () => {
         <>
             <aside className="sidebar">
                 <h1 className="logo">
-                    <Link className="logo__link" to="/boys-art-paint-center-delivery">
+                    <Link className="logo__link" to="/boys-art-paint-center-delivery/overview">
                         <GoPaintcan className="logo__icon" />
                         <span className="logo__value">
                             Boys Art <br />

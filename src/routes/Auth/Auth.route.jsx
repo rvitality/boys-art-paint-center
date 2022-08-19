@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuthContext } from "../../store/auth-context";
 
 import { signInAuthWithEmailAndPassword } from "../../utils/firebase/firebase.utils";
@@ -85,46 +85,66 @@ const Auth = () => {
     };
 
     return (
-        <section className="auth">
-            <h2 className="auth__login-heading">Login</h2>
-            <form onSubmit={loginHandler}>
-                <div className="form-control">
-                    <label htmlFor="email" className="form-control__label">
-                        Email
-                    </label>
-                    <input
-                        type="email"
-                        ref={emailRef}
-                        id="email"
-                        required
-                        defaultValue="boysartenterprises@gmail.com"
-                    />
+        <>
+            {!authContext.isLoggedIn ? (
+                <section className="auth">
+                    <h2 className="auth__login-heading">Login</h2>
+                    <form onSubmit={loginHandler}>
+                        <div className="form-control">
+                            <label htmlFor="email" className="form-control__label">
+                                Email
+                            </label>
+                            <input
+                                type="email"
+                                ref={emailRef}
+                                id="email"
+                                required
+                                defaultValue="boysartenterprises@gmail.com"
+                            />
+                        </div>
+                        <div className="form-control">
+                            <label htmlFor="password" className="form-control__label">
+                                Password
+                            </label>
+                            <input
+                                type="password"
+                                ref={passRef}
+                                id="password"
+                                defaultValue="qwerty09"
+                            />
+                        </div>
+                        <div className="auth__error"></div>
+                        <div className="auth__actions">
+                            {error && (
+                                <small
+                                    style={{
+                                        color: "orange",
+                                        fontStyle: "italic",
+                                        marginBottom: "1rem",
+                                    }}
+                                >
+                                    {error}
+                                </small>
+                            )}
+                            {isLoading ? (
+                                <p style={{ color: "#fff" }}>
+                                    <em>Please wait...</em>
+                                </p>
+                            ) : (
+                                <button type="submit">Log In</button>
+                            )}
+                        </div>
+                    </form>
+                </section>
+            ) : (
+                <div>
+                    You are already logged in.
+                    <Link style={{ color: "blue" }} to="/boys-art-paint-center-delivery/overview">
+                        Back
+                    </Link>
                 </div>
-                <div className="form-control">
-                    <label htmlFor="password" className="form-control__label">
-                        Password
-                    </label>
-                    <input type="password" ref={passRef} id="password" defaultValue="qwerty09" />
-                </div>
-                <div className="auth__error"></div>
-                <div className="auth__actions">
-                    {error && (
-                        <small
-                            style={{ color: "orange", fontStyle: "italic", marginBottom: "1rem" }}
-                        >
-                            {error}
-                        </small>
-                    )}
-                    {isLoading ? (
-                        <p style={{ color: "#fff" }}>
-                            <em>Please wait...</em>
-                        </p>
-                    ) : (
-                        <button type="submit">Log In</button>
-                    )}
-                </div>
-            </form>
-        </section>
+            )}
+        </>
     );
 };
 

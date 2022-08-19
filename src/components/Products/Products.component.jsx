@@ -7,6 +7,7 @@ import { useInfoContext } from "../../store/info-context";
 import { BiSearchAlt2 } from "react-icons/bi";
 
 import "./Products.styles.scss";
+import { logDOM } from "@testing-library/react";
 
 const chunkArray = (arr, chunk = 10) => {
     const arrCopy = [...arr];
@@ -22,10 +23,12 @@ const chunkArray = (arr, chunk = 10) => {
 const Products = () => {
     const { products } = useInfoContext();
 
-    const [dividedProducts, setDividedProducts] = useState(products.data || []);
+    const [dividedProducts, setDividedProducts] = useState([]);
     const [currentPageIndex, setCurrentPageIndex] = useState(1);
 
     const [productsToDisplay, setProductsToDisplay] = useState(dividedProducts[0] || []);
+
+    console.log();
 
     // const [currentPageArray, setCurrentPageArray] = useState(arr[0] || []);
     const [paginationSetIndex, setPaginationSetIndex] = useState(1);
@@ -99,6 +102,18 @@ const Products = () => {
 
         if (products.data.length === 0) {
             fetchProducts();
+        } else {
+            const productsCopy = [...products.data];
+            const chunkData = chunkArray(productsCopy, 10);
+            setDividedProducts(chunkData);
+
+            setPaginationArray(
+                Array(chunkData.length > 5 ? 5 : chunkData.length)
+                    .fill(0)
+                    .map((_, index) => index + 1)
+            );
+
+            setProductsToDisplay(chunkData[0]);
         }
     }, [products]);
 

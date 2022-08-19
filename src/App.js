@@ -12,13 +12,15 @@ const App = () => {
 
     return (
         <Routes>
+            <Route path="/boys-art-paint-center-delivery" element={<Auth />} />
+
             <Route
                 path="/boys-art-paint-center-delivery/*"
                 element={
                     authContext.isLoggedIn ? (
                         <Layout />
                     ) : (
-                        <Navigate to="/boys-art-paint-center-delivery/auth" />
+                        <Navigate to="/boys-art-paint-center-delivery" />
                     )
                 }
             />
@@ -29,23 +31,11 @@ const App = () => {
                     authContext.isLoggedIn ? (
                         <Profile />
                     ) : (
-                        <Navigate to="/boys-art-paint-center-delivery/auth" />
+                        <Navigate to="/boys-art-paint-center-delivery" />
                     )
                 }
             />
 
-            {/* <Route
-                path="/boys-art-paint-center-delivery/info/*"
-                element={
-                    authContext.isLoggedIn ? (
-                        <Home />
-                    ) : (
-                        <Navigate to="/boys-art-paint-center-delivery/auth" />
-                    )
-                }
-            /> */}
-
-            <Route path="/boys-art-paint-center-delivery/auth" element={<Auth />} />
             <Route
                 path="*"
                 element={
