@@ -18,7 +18,7 @@ const Categories = () => {
         }
     }, [categories]);
     return (
-        <div>
+        <article className="categories">
             <h2>Categories</h2>
             <br />
             <hr />
@@ -28,7 +28,7 @@ const Categories = () => {
                     <li key={`${category}_${index}`}>{category.categoryName}</li>
                 ))}
             </ul>
-        </div>
+        </article>
     );
 };
 

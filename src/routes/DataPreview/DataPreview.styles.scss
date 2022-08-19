@@ -1,8 +1,12 @@
 .data-preview {
-    background-color: #e7f4ff;
+    background-color: #f6fbff;
     height: 100%;
 
     article {
         padding: 3rem;
+
+        h2 {
+            margin-bottom: 4rem;
+        }
     }
 }

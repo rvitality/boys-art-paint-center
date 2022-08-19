@@ -19,7 +19,7 @@ const Brands = () => {
         }
     }, [brands]);
     return (
-        <div>
+        <article className="brands">
             <h2>Brands</h2>
             <br />
             <hr />
@@ -29,7 +29,7 @@ const Brands = () => {
                     <li key={`${brand}_${index}`}>{brand.brandName}</li>
                 ))}
             </ul>
-        </div>
+        </article>
     );
 };
 
