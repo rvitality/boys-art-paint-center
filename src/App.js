@@ -50,42 +50,14 @@ const App = () => {
 
 export default App;
 
-// const calculator = expression => {
-//     const arr = [];
-//     let num = "";
+function warnTheSheep(queue) {
+    const firstAnimal = queue[queue.length - 1];
+    if (firstAnimal === "wolf") return "Pls go away and stop eating my sheep";
 
-//     for (let i = 0; i < expression.length; i++) {
-//         const value = expression[i].trim();
+    for (let i = queue.length - 1; i >= 0; i--) {
+        const nextAnimal = queue[i - 1];
 
-//         if (!isNaN(+value)) {
-//             // console.log(value);
-//             num += value;
-//         } else {
-//             arr.push(num);
-//             arr.push(expression[i]);
-//             num = "";
-//         }
-//     }
-
-//     arr.push(num);
-
-//     console.log(arr);
-
-//     // find all the indexes of * and /
-// };
-
-// calculator("15 +  - 10 / 2");
-
-// 30
-
-// 5
-
-// ["13", "+", "2", "-", "5", "*", "2"]
-
-// calculator("23+4") ➞ 27
-// calculator("45-15") ➞ 30
-// calculator("13+2-5*2") ➞ 5
-// calculator("49/7*2-3") ➞ 11
-
-// price , discount(%)
-// returns the final price after the discount.
+        if (nextAnimal === "wolf")
+            return `Oi! Sheep number ${queue.length - i}! You are about to be eaten by a wolf!`;
+    }
+}

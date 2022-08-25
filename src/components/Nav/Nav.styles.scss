@@ -1,0 +1,43 @@
+.nav-container {
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 2rem;
+
+    .nav {
+        ul {
+            display: flex;
+            align-items: center;
+        }
+
+        &__link {
+            color: #8e929d;
+            width: 100%;
+            display: flex;
+            padding: 2rem;
+            transition: all 0.15s ease-in-out;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            transition: all 0.15s ease-in-out;
+            border-bottom: 2px solid transparent;
+
+            &:hover {
+                color: #287cc0;
+            }
+
+            &.active {
+                color: #287cc0;
+                border-color: #287cc0;
+            }
+        }
+
+        &__link-icon {
+            width: 2.15rem;
+            height: 2.15rem;
+        }
+    }
+}

@@ -7,8 +7,10 @@ import { signOutUser } from "../../utils/firebase/firebase.utils";
 
 import { FaUserCircle } from "react-icons/fa";
 import { BiChevronDown } from "react-icons/bi";
+import { GoPaintcan } from "react-icons/go";
 
 import "./Header.styles.scss";
+import Nav from "../../components/Nav/Nav.component";
 
 const Header = () => {
     const [showDropdown, setShowDropdown] = useState(false);
@@ -34,29 +36,46 @@ const Header = () => {
     return (
         <>
             <header className="header">
-                <div className="greeting">
-                    <p className="greeting__msg">
-                        Hello, <span className="greeting__name">{userName}</span>. Welcome back!
-                    </p>
-                </div>
-
-                <div className="user">
-                    <FaUserCircle className="user__icon" />
-                    <div className="user__name">{userEmail}</div>
-                    <BiChevronDown
-                        className="user__dropdown-icon"
-                        onClick={toggleDropdownHandler}
-                    />
-
-                    <div className={`dropdown ${showDropdown ? "show" : ""}`}>
-                        <Link to="">Profile</Link>
-                        <Link to="">Settings</Link>
-                        <Link to="">Help</Link>
-                        <Link className="logout" to="" onClick={logoutHandler}>
-                            Log out
+                <div className="header__upper-part">
+                    <h1 className="logo">
+                        <Link className="logo__link" to="/boys-art-paint-center-delivery/overview">
+                            <GoPaintcan className="logo__icon" />
+                            <span className="logo__value">
+                                Boys Art <br />
+                                Enterprises
+                            </span>
                         </Link>
+                    </h1>
+
+                    <div className="user-container">
+                        <div className="greeting">
+                            <p className="greeting__msg">
+                                Hello, <span className="greeting__name">{userName}</span>. Welcome
+                                back!
+                            </p>
+                        </div>
+
+                        <div className="user">
+                            <FaUserCircle className="user__icon" />
+                            <div className="user__name">{userEmail}</div>
+                            <BiChevronDown
+                                className="user__dropdown-icon"
+                                onClick={toggleDropdownHandler}
+                            />
+
+                            <div className={`dropdown ${showDropdown ? "show" : ""}`}>
+                                <Link to="">Profile</Link>
+                                <Link to="">Settings</Link>
+                                <Link to="">Help</Link>
+                                <Link className="logout" to="" onClick={logoutHandler}>
+                                    Log out
+                                </Link>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                <Nav />
             </header>
         </>
     );

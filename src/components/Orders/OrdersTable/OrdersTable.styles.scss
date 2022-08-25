@@ -1,0 +1,5 @@
+.orders-table {
+    tr {
+        grid-template-columns: repeat(13, 1fr);
+    }
+}

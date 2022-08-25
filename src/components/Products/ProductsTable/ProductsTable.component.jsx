@@ -7,7 +7,7 @@ const ProductsTable = ({ productsToDisplay }) => {
         <table className="products-table">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    {/* <th>ID</th> */}
                     <th>Brand</th>
                     <th>Image</th>
                     <th className="span-2">Name</th>
@@ -21,9 +21,8 @@ const ProductsTable = ({ productsToDisplay }) => {
             </thead>
 
             <tbody>
-                {productsToDisplay.map((product, index) => {
+                {productsToDisplay?.map((product, index) => {
                     const {
-                        created,
                         brand,
                         imageUrl,
                         name,
@@ -37,7 +36,7 @@ const ProductsTable = ({ productsToDisplay }) => {
 
                     return (
                         <tr key={`${name}_${index}`}>
-                            <td>#{Math.round(Math.random() * 1000)}</td>
+                            {/* <td>#{Math.round(Math.random() * 1000)}</td> */}
                             <td>{brand}</td>
                             <td>
                                 <img className="products__img" src={imageUrl} alt={name} />

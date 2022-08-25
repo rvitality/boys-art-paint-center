@@ -3,18 +3,58 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    // gap: 10rem;
-    padding: 3rem 3rem 3rem 0;
+    flex-direction: column;
+    padding: 2rem;
 
-    .logout-btn {
-        cursor: pointer;
-        background: none;
-        outline: none;
-        color: #fff;
-        border: none;
-        font-weight: bold;
-        font-size: 16px;
-        font-family: inherit;
+    &__upper-part {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .logo {
+        font-family: "Aboreto", cursive;
+        font-size: 1.7rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        filter: brightness(0.8);
+        transition: filter 0.15s ease-in-out;
+
+        &__link {
+            color: #287cc0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        &__icon {
+            width: 5rem;
+            height: 5rem;
+            margin-right: 1rem;
+        }
+
+        &__value {
+            font-weight: bold;
+        }
+
+        &:hover {
+            filter: brightness(1);
+        }
+    }
+
+    .user-container {
+        display: flex;
+        align-items: center;
+        gap: 8rem;
+    }
+
+    .greeting {
+        position: relative;
+        &__name {
+            font-weight: bold;
+            color: #287cc0;
+        }
     }
 
     .user {
@@ -22,6 +62,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        z-index: 9;
 
         &__name {
             font-weight: bold;
@@ -44,12 +85,15 @@
         }
     }
 
-    .greeting {
-        position: relative;
-        &__name {
-            font-weight: bold;
-            color: #287cc0;
-        }
+    .logout-btn {
+        cursor: pointer;
+        background: none;
+        outline: none;
+        color: #fff;
+        border: none;
+        font-weight: bold;
+        font-size: 16px;
+        font-family: inherit;
     }
 
     .dropdown {
