@@ -11,7 +11,7 @@ import { HiOutlineChevronRight } from "react-icons/hi";
 
 import "./DataTable.styles.scss";
 
-const DataTable = ({ categoryName, fetchedData, Table }) => {
+const DataTable = ({ categoryName, fetchedData, onFilterBySearch, isLoading, Table }) => {
     const [dividedProducts, setDividedProducts] = useState([]);
 
     const [productsToDisplay, setProductsToDisplay] = useState([]);
@@ -74,18 +74,8 @@ const DataTable = ({ categoryName, fetchedData, Table }) => {
 
     const searchChangeHandler = e => {
         const inputValue = e.target.value.trim().toLowerCase();
-
-        const filtered = dividedProducts[currentPageIndex - 1].filter(product => {
-            const { name, color, type } = product;
-
-            return (
-                name.toLowerCase().includes(inputValue) ||
-                color.toLowerCase().includes(inputValue) ||
-                type.toLowerCase().includes(inputValue)
-            );
-        });
-
-        setProductsToDisplay(filtered);
+        const filteredData = onFilterBySearch(dividedProducts[currentPageIndex - 1], inputValue);
+        setProductsToDisplay(filteredData);
     };
 
     const setInitialStates = data => {
@@ -102,45 +92,56 @@ const DataTable = ({ categoryName, fetchedData, Table }) => {
         setInitialStates(productsCopy);
     }, [fetchedData]);
 
+    let dataToShow;
+    let error = false;
+
+    if (error) {
+        console.log("error");
+    } else if (isLoading) {
+        dataToShow = <Spinner />;
+    } else if (productsToDisplay?.length === 0) {
+        dataToShow = <h2 className="no-result-heading">No results.</h2>;
+    } else {
+        dataToShow = (
+            <>
+                <Table productsToDisplay={productsToDisplay} />
+                <div className="pagination">
+                    {productsToDisplay?.length > 0 && (
+                        <>
+                            {paginationSetIndex > 1 && (
+                                <button onClick={backToFirstSetButtonsHandler}>
+                                    <HiOutlineChevronDoubleLeft />
+                                </button>
+                            )}
+                            {paginationButtons}
+                            {showNextButton && (
+                                <button onClick={nextSetButtonsHandler}>
+                                    <HiOutlineChevronRight />
+                                </button>
+                            )}
+                        </>
+                    )}
+                </div>
+            </>
+        );
+    }
+
     return (
         <article className="data-table">
-            <h2>{categoryName}</h2>
+            <h2 className="category-name">{categoryName}</h2>
 
             <div className="filter">
                 <div className="filter__search">
                     <BiSearchAlt2 />
                     <input
                         type="text"
-                        placeholder="Filter by name, color or type"
+                        placeholder="Filter by value"
                         onChange={searchChangeHandler}
                     />
                 </div>
             </div>
 
-            {productsToDisplay?.length === 0 ? (
-                <Spinner />
-            ) : (
-                <>
-                    <Table productsToDisplay={productsToDisplay} />
-                    <div className="pagination">
-                        {productsToDisplay?.length > 0 && (
-                            <>
-                                {paginationSetIndex > 1 && (
-                                    <button onClick={backToFirstSetButtonsHandler}>
-                                        <HiOutlineChevronDoubleLeft />
-                                    </button>
-                                )}
-                                {paginationButtons}
-                                {showNextButton && (
-                                    <button onClick={nextSetButtonsHandler}>
-                                        <HiOutlineChevronRight />
-                                    </button>
-                                )}
-                            </>
-                        )}
-                    </div>
-                </>
-            )}
+            {dataToShow}
         </article>
     );
 };

@@ -3,7 +3,6 @@ import React from "react";
 import "./OrdersTable.styles.scss";
 
 const OrdersTable = ({ productsToDisplay }) => {
-    console.log(productsToDisplay);
     return (
         <table className="orders-table">
             <thead>
@@ -41,10 +40,15 @@ const OrdersTable = ({ productsToDisplay }) => {
                             <td>{phoneNumber}</td>
                             <td>{getPaymentTypeString}</td>
                             <td>{getOrderTypeString}</td>
-                            <td>{status}</td>
+                            <td className={`status ${status.toLowerCase()}`}>{status}</td>
                             <td>{scheduledDate}</td>
                             <td>{scheduledTime}</td>
-                            <td>{total}</td>
+                            <td className="total">
+                                ₱
+                                {Math.round(total).toLocaleString("en-US", {
+                                    minimumFractionDigits: 2,
+                                })}
+                            </td>
                             <td>{cartLength}</td>
                             <td>
                                 <span>Edit</span>

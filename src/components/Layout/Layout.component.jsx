@@ -10,8 +10,6 @@ const Layout = props => {
         <main className="main">
             <Header />
             <DataPreview />
-
-            {/* <div>{props.children}</div> */}
         </main>
     );
 };

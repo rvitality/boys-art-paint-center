@@ -83,13 +83,39 @@
             margin-top: 1rem;
             display: grid;
             // grid-template-columns: repeat(10, 1fr);
+            gap: 1rem;
 
             align-items: center;
             padding: 1rem;
         }
 
+        td {
+            text-transform: capitalize;
+        }
+
         .span-2 {
             grid-column-start: span 2;
+        }
+
+        .status {
+            padding: 0.5rem 0;
+            color: #fff;
+        }
+
+        .cancelled {
+            background-color: #fba809;
+        }
+
+        .placed {
+            background-color: #8b39c2;
+        }
+
+        .delivered {
+            background-color: #3ec28f;
+        }
+
+        .total {
+            font-weight: bold;
         }
     }
 }
