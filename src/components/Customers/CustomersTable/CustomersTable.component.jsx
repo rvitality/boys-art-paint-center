@@ -19,20 +19,27 @@ const CustomersTable = ({ dataToDisplay: customersToDisplay }) => {
                     <SortAbleTableHeader
                         dataArr={customersToDisplay}
                         onSort={sortHandler}
-                        typeToSort="Name"
-                    />
+                        typeToSort="name"
+                    >
+                        Name
+                    </SortAbleTableHeader>
                     <th>Address</th>
                     <th>Phone</th>
                     <SortAbleTableHeader
                         dataArr={customersToDisplay}
                         onSort={sortHandler}
-                        typeToSort="Email"
-                    />
+                        typeToSort="email"
+                    >
+                        Email
+                    </SortAbleTableHeader>
                     <SortAbleTableHeader
                         dataArr={customersToDisplay}
                         onSort={sortHandler}
-                        typeToSort="Role"
-                    />
+                        typeToSort="role"
+                    >
+                        Role
+                    </SortAbleTableHeader>
+
                     <th></th>
                 </tr>
             </thead>

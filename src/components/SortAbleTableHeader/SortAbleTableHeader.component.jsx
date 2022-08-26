@@ -4,20 +4,24 @@ import { HiArrowSmDown } from "react-icons/hi";
 
 import "./SortAbleTableHeader.styles.scss";
 
-const SortAbleTableHeader = ({ dataArr, typeToSort, onSort, className }) => {
+const SortAbleTableHeader = ({ dataArr, typeToSort, onSort, className, children }) => {
     const [isAsc, setIsAsc] = useState(false);
 
     const sortedDataAsc = useMemo(() => {
-        const selectedType = typeToSort.toLowerCase();
-
         const compare = (a, b) => {
-            if (a[selectedType] < b[selectedType]) {
+            const x = typeToSort === "cart" ? a["cart"].length : a[typeToSort];
+            const y = typeToSort === "cart" ? b["cart"].length : b[typeToSort];
+
+            if (x < y) {
                 return -1;
             }
-            if (a[selectedType] > b[selectedType]) {
+            if (x > y) {
                 return 1;
             }
+
             return 0;
+
+            // return x > y ? -1 : x < y ? 1 : 0;
         };
 
         const dataCopy = [...dataArr];
@@ -26,8 +30,8 @@ const SortAbleTableHeader = ({ dataArr, typeToSort, onSort, className }) => {
 
     const sortedDataDesc = useMemo(() => {
         // ! sort doesnt trigger rerender
-        // ! there is no change detected since the reference is the same
-        const sortedDataAscCopy = [...sortedDataAsc]; // ! that's why this line is needed. You have to create a new array
+        //  there is no change detected since the reference is the same
+        const sortedDataAscCopy = [...sortedDataAsc]; //  that's why this line is needed. You have to create a new array
         return sortedDataAscCopy.reverse();
     }, [sortedDataAsc]);
 
@@ -43,7 +47,7 @@ const SortAbleTableHeader = ({ dataArr, typeToSort, onSort, className }) => {
 
     return (
         <th className={`sort-able ${className}`} onClick={sortHandler}>
-            <span style={{ textTransform: "capitalize" }}>{typeToSort}</span>
+            <span style={{ textTransform: "capitalize" }}>{children}</span>
             <HiArrowSmDown className={`${isAsc ? "rotate" : ""}`} />
         </th>
     );

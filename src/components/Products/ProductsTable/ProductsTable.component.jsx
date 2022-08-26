@@ -20,28 +20,56 @@ const ProductsTable = ({ dataToDisplay: productsToDisplay }) => {
                     <SortAbleTableHeader
                         dataArr={productsToDisplay}
                         onSort={sortHandler}
-                        typeToSort="Brand"
-                    />
+                        typeToSort="brand"
+                    >
+                        Brand
+                    </SortAbleTableHeader>
+
                     <th>Image</th>
+
                     <SortAbleTableHeader
                         dataArr={productsToDisplay}
                         className="span-2"
                         onSort={sortHandler}
-                        typeToSort="Name"
-                    />
+                        typeToSort="name"
+                    >
+                        Name
+                    </SortAbleTableHeader>
+
                     <SortAbleTableHeader
                         dataArr={productsToDisplay}
                         onSort={sortHandler}
-                        typeToSort="Color"
-                    />
+                        typeToSort="color"
+                    >
+                        Color
+                    </SortAbleTableHeader>
+
                     <SortAbleTableHeader
                         dataArr={productsToDisplay}
                         onSort={sortHandler}
-                        typeToSort="Type"
-                    />
-                    <th>Price</th>
+                        typeToSort="type"
+                    >
+                        Type
+                    </SortAbleTableHeader>
+
+                    <SortAbleTableHeader
+                        dataArr={productsToDisplay}
+                        onSort={sortHandler}
+                        typeToSort="price"
+                    >
+                        Price
+                    </SortAbleTableHeader>
+
                     <th>Volume</th>
-                    <th className="quantity quantity__heading">Quantity</th>
+
+                    <SortAbleTableHeader
+                        dataArr={productsToDisplay}
+                        onSort={sortHandler}
+                        typeToSort="currentQuantity"
+                    >
+                        Stock
+                    </SortAbleTableHeader>
+
                     <th></th>
                 </tr>
             </thead>

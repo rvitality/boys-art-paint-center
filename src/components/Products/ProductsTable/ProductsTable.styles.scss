@@ -1,4 +1,5 @@
 .products-table {
+    min-height: 100vh;
     tr {
         grid-template-columns: repeat(10, 1fr);
     }

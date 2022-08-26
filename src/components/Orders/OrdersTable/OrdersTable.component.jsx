@@ -19,27 +19,44 @@ const OrdersTable = ({ dataToDisplay: ordersToDisplay }) => {
                     <SortAbleTableHeader
                         dataArr={ordersToDisplay}
                         onSort={sortHandler}
-                        typeToSort="Name"
+                        typeToSort="name"
                         className="span-2"
-                    />
-                    <SortAbleTableHeader
-                        dataArr={ordersToDisplay}
-                        onSort={sortHandler}
-                        typeToSort="Address"
-                        className="span-2"
-                    />
+                    >
+                        Name
+                    </SortAbleTableHeader>
+
+                    <th className="span-2">Address</th>
                     <th>Phone</th>
                     <th>Payment</th>
                     <th>Order Type</th>
+
                     <SortAbleTableHeader
                         dataArr={ordersToDisplay}
                         onSort={sortHandler}
-                        typeToSort="Status"
-                    />
+                        typeToSort="status"
+                    >
+                        Status
+                    </SortAbleTableHeader>
+
                     <th>Date</th>
                     <th>Time</th>
-                    <th>Total</th>
-                    <th>Cart</th>
+
+                    <SortAbleTableHeader
+                        dataArr={ordersToDisplay}
+                        onSort={sortHandler}
+                        typeToSort="total"
+                    >
+                        Total
+                    </SortAbleTableHeader>
+
+                    <SortAbleTableHeader
+                        dataArr={ordersToDisplay}
+                        onSort={sortHandler}
+                        typeToSort="cart"
+                    >
+                        Items
+                    </SortAbleTableHeader>
+
                     <th></th>
                 </tr>
             </thead>
@@ -54,14 +71,18 @@ const OrdersTable = ({ dataToDisplay: ordersToDisplay }) => {
                         scheduledTime,
                     } = order.orderInfo;
                     const { fullAddress } = order.addressInfo;
-                    const { orderID, status, total, cartLength } = order;
+                    const { orderID, status, total, cart } = order;
 
                     return (
                         <tr key={orderID}>
                             <td className="span-2">{fullName}</td>
                             <td className="span-2">{fullAddress}</td>
                             <td>{phoneNumber}</td>
-                            <td>{getPaymentTypeString}</td>
+                            <td>
+                                {getPaymentTypeString.toLowerCase() === "cash on delivery"
+                                    ? "COD"
+                                    : getPaymentTypeString}
+                            </td>
                             <td>{getOrderTypeString}</td>
                             <td className={`status ${status.toLowerCase()}`}>{status}</td>
                             <td>{scheduledDate}</td>
@@ -72,7 +93,7 @@ const OrdersTable = ({ dataToDisplay: ordersToDisplay }) => {
                                     minimumFractionDigits: 2,
                                 })}
                             </td>
-                            <td>{cartLength}</td>
+                            <td>{cart.length}</td>
                             <td>
                                 <span>Edit</span>
                                 <span>Delete</span>
