@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/boys-art-paint-center-delivery/static/css/main.c6f8acd2.css",
-    "main.js": "/boys-art-paint-center-delivery/static/js/main.0515e696.js",
+    "main.css": "/boys-art-paint-center-delivery/static/css/main.5e3e10fd.css",
+    "main.js": "/boys-art-paint-center-delivery/static/js/main.b7cf6a9d.js",
     "static/js/787.ff623666.chunk.js": "/boys-art-paint-center-delivery/static/js/787.ff623666.chunk.js",
     "index.html": "/boys-art-paint-center-delivery/index.html",
-    "main.c6f8acd2.css.map": "/boys-art-paint-center-delivery/static/css/main.c6f8acd2.css.map",
-    "main.0515e696.js.map": "/boys-art-paint-center-delivery/static/js/main.0515e696.js.map",
+    "main.5e3e10fd.css.map": "/boys-art-paint-center-delivery/static/css/main.5e3e10fd.css.map",
+    "main.b7cf6a9d.js.map": "/boys-art-paint-center-delivery/static/js/main.b7cf6a9d.js.map",
     "787.ff623666.chunk.js.map": "/boys-art-paint-center-delivery/static/js/787.ff623666.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.c6f8acd2.css",
-    "static/js/main.0515e696.js"
+    "static/css/main.5e3e10fd.css",
+    "static/js/main.b7cf6a9d.js"
   ]
 }
