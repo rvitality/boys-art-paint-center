@@ -13,8 +13,6 @@ const Brands = () => {
         };
 
         if (brands.data.length === 0) {
-            console.log("fetch");
-
             fetchBrands();
         }
     }, [brands]);

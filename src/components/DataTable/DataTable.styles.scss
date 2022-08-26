@@ -86,6 +86,13 @@
             gap: 1rem;
 
             align-items: center;
+        }
+
+        thead tr {
+            padding: 0;
+        }
+
+        th {
             padding: 1rem;
         }
 
@@ -114,7 +121,7 @@
             background-color: #3ec28f;
         }
 
-        .total {
+        .bold {
             font-weight: bold;
         }
     }

@@ -6,6 +6,7 @@ import Brands from "../../components/Brands/Brands.component";
 import Categories from "../../components/Categories/Categories.component";
 import Products from "../../components/Products/Products.component";
 import Orders from "../../components/Orders/Orders.component";
+import Customers from "../../components/Customers/Customers.component";
 
 import "./DataPreview.styles.scss";
 
@@ -18,6 +19,7 @@ const DataPreview = () => {
                 <Route path="categories" element={<Categories />} />
                 <Route path="products" element={<Products />} />
                 <Route path="orders" element={<Orders />} />
+                <Route path="customers" element={<Customers />} />
             </Routes>
         </section>
     );

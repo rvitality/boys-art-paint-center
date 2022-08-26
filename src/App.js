@@ -50,14 +50,20 @@ const App = () => {
 
 export default App;
 
-function warnTheSheep(queue) {
-    const firstAnimal = queue[queue.length - 1];
-    if (firstAnimal === "wolf") return "Pls go away and stop eating my sheep";
+// const arr = ["banana", "apple", "zebra", "dog", "cat"];
 
-    for (let i = queue.length - 1; i >= 0; i--) {
-        const nextAnimal = queue[i - 1];
+// // -1 - reverse
+// // 0 - not changes
+// // 1
+// const sorted = arr.sort((a, b) => -1);
 
-        if (nextAnimal === "wolf")
-            return `Oi! Sheep number ${queue.length - i}! You are about to be eaten by a wolf!`;
-    }
-}
+// function compareFn(a, b) {
+//     if (a is less than b by some ordering criterion) {
+//       return -1;
+//     }
+//     if (a is greater than b by the ordering criterion) {
+//       return 1;
+//     }
+//     // a must be equal to b
+//     return 0;
+//   }

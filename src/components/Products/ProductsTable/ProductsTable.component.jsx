@@ -1,18 +1,44 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+
+import SortAbleTableHeader from "../../SortAbleTableHeader/SortAbleTableHeader.component";
 
 import "./ProductsTable.styles.scss";
 
-const ProductsTable = ({ productsToDisplay }) => {
+const ProductsTable = ({ dataToDisplay: productsToDisplay }) => {
+    const [products, setProducts] = useState([]);
+
+    useEffect(() => {
+        setProducts(productsToDisplay);
+    }, [productsToDisplay]);
+
+    const sortHandler = sortedData => setProducts(sortedData);
+
     return (
         <table className="products-table">
             <thead>
                 <tr>
-                    {/* <th>ID</th> */}
-                    <th>Brand</th>
+                    <SortAbleTableHeader
+                        dataArr={productsToDisplay}
+                        onSort={sortHandler}
+                        typeToSort="Brand"
+                    />
                     <th>Image</th>
-                    <th className="span-2">Name</th>
-                    <th>Color</th>
-                    <th>Type</th>
+                    <SortAbleTableHeader
+                        dataArr={productsToDisplay}
+                        className="span-2"
+                        onSort={sortHandler}
+                        typeToSort="Name"
+                    />
+                    <SortAbleTableHeader
+                        dataArr={productsToDisplay}
+                        onSort={sortHandler}
+                        typeToSort="Color"
+                    />
+                    <SortAbleTableHeader
+                        dataArr={productsToDisplay}
+                        onSort={sortHandler}
+                        typeToSort="Type"
+                    />
                     <th>Price</th>
                     <th>Volume</th>
                     <th className="quantity quantity__heading">Quantity</th>
@@ -21,7 +47,7 @@ const ProductsTable = ({ productsToDisplay }) => {
             </thead>
 
             <tbody>
-                {productsToDisplay?.map((product, index) => {
+                {products?.map((product, index) => {
                     const {
                         brand,
                         imageUrl,
@@ -41,10 +67,15 @@ const ProductsTable = ({ productsToDisplay }) => {
                             <td>
                                 <img className="products__img" src={imageUrl} alt={name} />
                             </td>
-                            <td className="span-2">{name}</td>
+                            <td className="span-2 bold">{name}</td>
                             <td>{color}</td>
                             <td>{type}</td>
-                            <td>{price}</td>
+                            <td className="bold">
+                                ₱
+                                {Math.round(price).toLocaleString("en-US", {
+                                    minimumFractionDigits: 2,
+                                })}
+                            </td>
                             <td>
                                 {volumeValue} {volume}
                             </td>

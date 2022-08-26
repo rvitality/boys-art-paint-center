@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuthContext } from "../../store/auth-context";
+import { useInfoContext } from "../../store/info-context";
 
 import { signInAuthWithEmailAndPassword } from "../../utils/firebase/firebase.utils";
 
@@ -10,6 +11,7 @@ import "./Auth.styles.scss";
 
 const Auth = () => {
     const authContext = useAuthContext();
+    const { customers } = useInfoContext();
 
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -41,6 +43,13 @@ const Auth = () => {
                 const users = await response.json();
 
                 if (!users) return;
+
+                const modifiedUsers = Object.keys(users).map(key => ({
+                    userID: key,
+                    ...users[key],
+                }));
+
+                customers.setCustomers(modifiedUsers);
 
                 if (users[uid]?.role.toLowerCase() === "admin") {
                     authContext.login(users[uid]);

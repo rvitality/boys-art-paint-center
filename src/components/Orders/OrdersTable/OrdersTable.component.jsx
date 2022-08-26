@@ -1,18 +1,41 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import SortAbleTableHeader from "../../SortAbleTableHeader/SortAbleTableHeader.component";
 
 import "./OrdersTable.styles.scss";
 
-const OrdersTable = ({ productsToDisplay }) => {
+const OrdersTable = ({ dataToDisplay: ordersToDisplay }) => {
+    const [orders, setOrders] = useState([]);
+
+    useEffect(() => {
+        setOrders(ordersToDisplay);
+    }, [ordersToDisplay]);
+
+    const sortHandler = sortedData => setOrders(sortedData);
+
     return (
         <table className="orders-table">
             <thead>
                 <tr>
-                    <th className="span-2">Name</th>
-                    <th className="span-2">Address</th>
+                    <SortAbleTableHeader
+                        dataArr={ordersToDisplay}
+                        onSort={sortHandler}
+                        typeToSort="Name"
+                        className="span-2"
+                    />
+                    <SortAbleTableHeader
+                        dataArr={ordersToDisplay}
+                        onSort={sortHandler}
+                        typeToSort="Address"
+                        className="span-2"
+                    />
                     <th>Phone</th>
                     <th>Payment</th>
                     <th>Order Type</th>
-                    <th>Status</th>
+                    <SortAbleTableHeader
+                        dataArr={ordersToDisplay}
+                        onSort={sortHandler}
+                        typeToSort="Status"
+                    />
                     <th>Date</th>
                     <th>Time</th>
                     <th>Total</th>
@@ -22,7 +45,7 @@ const OrdersTable = ({ productsToDisplay }) => {
             </thead>
 
             <tbody>
-                {productsToDisplay?.map(order => {
+                {orders?.map(order => {
                     const { fullName, phoneNumber } = order.customerInfo;
                     const {
                         getPaymentTypeString,
@@ -43,7 +66,7 @@ const OrdersTable = ({ productsToDisplay }) => {
                             <td className={`status ${status.toLowerCase()}`}>{status}</td>
                             <td>{scheduledDate}</td>
                             <td>{scheduledTime}</td>
-                            <td className="total">
+                            <td className="bold">
                                 ₱
                                 {Math.round(total).toLocaleString("en-US", {
                                     minimumFractionDigits: 2,

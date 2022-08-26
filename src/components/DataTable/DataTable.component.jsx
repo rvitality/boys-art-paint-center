@@ -99,12 +99,10 @@ const DataTable = ({ categoryName, fetchedData, onFilterBySearch, isLoading, Tab
         console.log("error");
     } else if (isLoading) {
         dataToShow = <Spinner />;
-    } else if (productsToDisplay?.length === 0) {
-        dataToShow = <h2 className="no-result-heading">No results.</h2>;
-    } else {
+    } else if (productsToDisplay?.length > 0) {
         dataToShow = (
             <>
-                <Table productsToDisplay={productsToDisplay} />
+                <Table dataToDisplay={productsToDisplay} />
                 <div className="pagination">
                     {productsToDisplay?.length > 0 && (
                         <>
@@ -124,6 +122,8 @@ const DataTable = ({ categoryName, fetchedData, onFilterBySearch, isLoading, Tab
                 </div>
             </>
         );
+    } else {
+        dataToShow = <h2 className="no-result-heading">No results.</h2>;
     }
 
     return (

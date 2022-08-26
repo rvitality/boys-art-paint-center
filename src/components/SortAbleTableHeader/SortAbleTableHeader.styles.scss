@@ -1,0 +1,22 @@
+.sort-able {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.25s ease-in-out;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.035);
+    }
+
+    svg {
+        color: #555;
+        font-size: 1.8rem;
+        transition: all 0.25s ease-in-out;
+
+        &.rotate {
+            transform: rotate(-180deg);
+        }
+    }
+}
