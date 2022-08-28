@@ -104,7 +104,7 @@ const ProductsTable = ({ dataToDisplay: productsToDisplay }) => {
                                     minimumFractionDigits: 2,
                                 })}
                             </td>
-                            <td>
+                            <td className="volume">
                                 {volumeValue} {volume}
                             </td>
                             <td className="quantity__value">{currentQuantity}</td>

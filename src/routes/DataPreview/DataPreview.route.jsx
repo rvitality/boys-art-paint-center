@@ -9,17 +9,20 @@ import Orders from "../../components/Orders/Orders.component";
 import Customers from "../../components/Customers/Customers.component";
 
 import "./DataPreview.styles.scss";
+import NewProduct from "../../components/NewProduct/NewProduct.component";
 
 const DataPreview = () => {
     return (
         <section className="data-preview">
             <Routes>
-                <Route path="overview" element={<Overview />} />
-                <Route path="brands" element={<Brands />} />
-                <Route path="categories" element={<Categories />} />
+                <Route path="overview/*" element={<Overview />} />
+                <Route path="brands/*" element={<Brands />} />
+                <Route path="categories/*" element={<Categories />} />
+
                 <Route path="products" element={<Products />} />
-                <Route path="orders" element={<Orders />} />
-                <Route path="customers" element={<Customers />} />
+
+                <Route path="orders/*" element={<Orders />} />
+                <Route path="customers/*" element={<Customers />} />
             </Routes>
         </section>
     );

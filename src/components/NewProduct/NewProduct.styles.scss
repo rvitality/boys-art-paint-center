@@ -1,0 +1,63 @@
+.new-item-container {
+    opacity: 0;
+    height: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease-in-out;
+
+    &.show {
+        pointer-events: all;
+        height: auto;
+        opacity: 1;
+    }
+
+    .img-upload-container {
+        height: 15rem;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        width: 15rem !important;
+        gap: 0 !important;
+        margin-bottom: 3rem !important;
+
+        input {
+            height: 100%;
+            width: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+    }
+
+    .action-buttons {
+        margin-top: 2rem;
+        align-self: flex-end;
+        display: flex;
+        gap: 2rem;
+
+        button {
+            cursor: pointer;
+            font-size: 1.5rem;
+            border-radius: 5px;
+            padding: 1rem 1.5rem;
+            font-weight: bold;
+            transition: all 0.15s ease-in-out;
+            border: 1px solid #287cc0;
+            color: #fff;
+            background-color: #287cc0;
+
+            &:hover {
+                color: #287cc0;
+                background: none;
+            }
+
+            &.cancel-btn {
+                color: #287cc0;
+                background: none;
+
+                &:hover {
+                    background-color: #287cc0;
+                    color: #fff;
+                }
+            }
+        }
+    }
+}

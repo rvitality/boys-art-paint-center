@@ -11,7 +11,16 @@ import { HiOutlineChevronRight } from "react-icons/hi";
 
 import "./DataTable.styles.scss";
 
-const DataTable = ({ categoryName, fetchedData, onFilterBySearch, isLoading, Table }) => {
+const DataTable = ({
+    categoryName,
+    fetchedData,
+    onFilterBySearch,
+    isLoading,
+    NewItemForm,
+    Table,
+}) => {
+    const [showNewItemForm, setShowNewItemForm] = useState(false);
+
     const [dividedProducts, setDividedProducts] = useState([]);
 
     const [productsToDisplay, setProductsToDisplay] = useState([]);
@@ -128,20 +137,39 @@ const DataTable = ({ categoryName, fetchedData, onFilterBySearch, isLoading, Tab
 
     return (
         <article className="data-table">
-            <h2 className="category-name">{categoryName}</h2>
+            <NewItemForm
+                showNewItemForm={showNewItemForm}
+                onHide={() => setShowNewItemForm(false)}
+            />
+            {/* <NewItemForm onHide={() => setShowNewItemForm(false)} /> */}
 
-            <div className="filter">
-                <div className="filter__search">
-                    <BiSearchAlt2 />
-                    <input
-                        type="text"
-                        placeholder="Filter by value"
-                        onChange={searchChangeHandler}
-                    />
+            <div className={`main-content ${showNewItemForm ? "hide" : ""}`}>
+                <h2 className="category-name">{categoryName}</h2>
+
+                <div className="main-content__upper">
+                    <div className="search">
+                        <BiSearchAlt2 />
+                        <input
+                            type="text"
+                            placeholder="Filter by value"
+                            onChange={searchChangeHandler}
+                        />
+                    </div>
+
+                    <div className="add-new">
+                        <button
+                            onClick={() => {
+                                setShowNewItemForm(true);
+                            }}
+                            className="add-item-btn"
+                        >
+                            Add New
+                        </button>
+                    </div>
                 </div>
-            </div>
 
-            {dataToShow}
+                {dataToShow}
+            </div>
         </article>
     );
 };

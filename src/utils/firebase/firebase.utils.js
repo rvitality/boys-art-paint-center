@@ -2,15 +2,15 @@ import { initializeApp } from "firebase/app";
 
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+
 import {
     getFirestore,
-    doc,
-    getDoc,
-    setDoc,
     collection,
-    writeBatch,
+    addDoc,
     query,
     getDocs,
+    serverTimestamp,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -26,17 +26,55 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
+
 export const auth = getAuth();
 
 export const db = getFirestore();
 
 export const getDataAndDocuments = async collectionName => {
+    if (!collectionName) return;
+
     const collectionRef = collection(db, collectionName);
     const q = query(collectionRef);
 
     const querySnapshot = await getDocs(q);
 
+    // const snapshot = await getDocs(collectionRef);
+
     return querySnapshot.docs.map(docSnapshot => docSnapshot.data());
+};
+
+export const addNewProduct = async (product, url) => {
+    if (!product) return;
+
+    const response = await addDoc(collection(db, "cities"), {
+        imageUrl: url,
+        created: serverTimestamp(),
+        updated: serverTimestamp(),
+        ...product,
+    });
+
+    console.log("product");
+};
+
+export const uploadNewProduct = (product, imgUpload) => {
+    if (!imgUpload) return;
+
+    // ! upload img first to storage to get the download url before adding the new product to firestore db
+
+    const storage = getStorage();
+    const productImagesRef = ref(storage, `products/${imgUpload.name}`);
+
+    uploadBytes(productImagesRef, imgUpload)
+        .then(snapshot => {
+            getDownloadURL(snapshot.ref).then(url => {
+                console.log("image");
+                addNewProduct(product, url);
+            });
+        })
+        .catch(err => {
+            console.log(err.message);
+        });
 };
 
 export const signInAuthWithEmailAndPassword = async (email, password) => {
