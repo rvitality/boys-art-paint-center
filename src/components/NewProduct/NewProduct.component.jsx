@@ -1,15 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import { uploadNewProduct } from "../../utils/firebase/firebase.utils";
+import { useInfoContext } from "../../store/info-context";
 
 import imgPlaceholder from "../../assets/images/img-placeholder.jpg";
 
 import "./NewProduct.styles.scss";
-import { useInfoContext } from "../../store/info-context";
 
 const NewProduct = ({ showNewItemForm, onHide }) => {
-    const { products } = useInfoContext();
-
     const [imgFileInput, setImgFileInput] = useState();
     const [imgFileReaderInput, setImgFileReaderInput] = useState();
 
@@ -20,6 +18,15 @@ const NewProduct = ({ showNewItemForm, onHide }) => {
         status: "",
         msg: "",
     });
+
+    const brandRef = useRef();
+    const nameRef = useRef();
+    const typeRef = useRef();
+    const colorRef = useRef();
+    const priceRef = useRef();
+    const stockRef = useRef();
+    const volumeValueRef = useRef();
+    const volumeRef = useRef();
 
     useEffect(() => {
         if (isLoading === undefined) return;
@@ -44,15 +51,6 @@ const NewProduct = ({ showNewItemForm, onHide }) => {
             clearTimeout(timeout);
         };
     }, [isLoading, responseID]);
-
-    const brandRef = useRef();
-    const nameRef = useRef();
-    const typeRef = useRef();
-    const colorRef = useRef();
-    const priceRef = useRef();
-    const stockRef = useRef();
-    const volumeValueRef = useRef();
-    const volumeRef = useRef();
 
     const fileReader = new FileReader();
 
@@ -195,7 +193,7 @@ const NewProduct = ({ showNewItemForm, onHide }) => {
                     <button type="button" className="cancel-btn" onClick={onHide}>
                         Cancel
                     </button>
-                    {!isLoading && <button type="submit">Add Item</button>}
+                    {!isLoading && <button type="submit"> Add Item</button>}
                     {isLoading && <p>Please wait...</p>}
                 </div>
             </form>

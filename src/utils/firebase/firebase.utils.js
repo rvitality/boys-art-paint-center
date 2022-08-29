@@ -5,9 +5,11 @@ import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
 import {
+    doc,
     getFirestore,
     collection,
     addDoc,
+    updateDoc,
     query,
     getDocs,
     serverTimestamp,
@@ -30,6 +32,26 @@ const firebaseApp = initializeApp(firebaseConfig);
 export const auth = getAuth();
 
 export const db = getFirestore();
+
+export const getProductDocuments = async (collectionName = "products") => {
+    if (!collectionName) return;
+
+    const collectionRef = collection(db, collectionName);
+    const q = query(collectionRef);
+
+    const querySnapshot = await getDocs(q);
+
+    // const snapshot = await getDocs(collectionRef);
+
+    return querySnapshot.docs?.map(docSnapshot => {
+        const createdDate = docSnapshot.data().created.toDate();
+        const created = `${createdDate.getDate()}/${
+            createdDate.getMonth() + 1
+        }/${createdDate.getFullYear()}`;
+
+        return { ...docSnapshot.data(), id: docSnapshot.id, created, updated: created };
+    });
+};
 
 export const getDataAndDocuments = async collectionName => {
     if (!collectionName) return;
@@ -78,6 +100,15 @@ export const uploadNewProduct = (product, imgUpload) => {
             return err.message;
         });
 };
+
+export const updateDocument = async (collectionName, product) => {
+    const { id, price } = product;
+
+    const documentRef = doc(db, collectionName, id);
+    return await updateDoc(documentRef, { price: price + 5 });
+};
+
+// ! AUTH -------------------------------------------
 
 export const signInAuthWithEmailAndPassword = async (email, password) => {
     if (!email || !password) return;

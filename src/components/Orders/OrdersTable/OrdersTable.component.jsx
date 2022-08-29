@@ -6,6 +6,8 @@ import "./OrdersTable.styles.scss";
 const OrdersTable = ({ dataToDisplay: ordersToDisplay }) => {
     const [orders, setOrders] = useState([]);
 
+    console.log(orders);
+
     useEffect(() => {
         setOrders(ordersToDisplay);
     }, [ordersToDisplay]);

@@ -2,9 +2,18 @@ import React, { useEffect, useState } from "react";
 
 import SortAbleTableHeader from "../../SortAbleTableHeader/SortAbleTableHeader.component";
 
+import { updateDocument } from "../../../utils/firebase/firebase.utils";
+import { useInfoContext } from "../../../store/info-context";
+
+import { TiEdit } from "react-icons/ti";
+import { MdDelete } from "react-icons/md";
+
 import "./ProductsTable.styles.scss";
 
 const ProductsTable = ({ dataToDisplay: productsToDisplay }) => {
+    // const { currentProductEdit } = useInfoContext();
+    // console.log(currentProductEdit);
+
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
@@ -12,6 +21,17 @@ const ProductsTable = ({ dataToDisplay: productsToDisplay }) => {
     }, [productsToDisplay]);
 
     const sortHandler = sortedData => setProducts(sortedData);
+
+    const updateProductHandler = async product => {
+        // console.log("here");
+        // currentProductEdit.setCurrentProductEdit(prevState => ({
+        //     ...prevState,
+        //     data: product,
+        //     showForm: true,
+        //     dog: true,
+        // }));
+        // await updateDocument("cities", product);
+    };
 
     return (
         <table className="products-table">
@@ -70,13 +90,16 @@ const ProductsTable = ({ dataToDisplay: productsToDisplay }) => {
                         Stock
                     </SortAbleTableHeader>
 
-                    <th></th>
+                    <th>Action</th>
                 </tr>
             </thead>
 
             <tbody>
                 {products?.map((product, index) => {
+                    // console.log(product.created.toDate());
+
                     const {
+                        id,
                         brand,
                         imageUrl,
                         name,
@@ -89,7 +112,7 @@ const ProductsTable = ({ dataToDisplay: productsToDisplay }) => {
                     } = product;
 
                     return (
-                        <tr key={`${name}_${index}`}>
+                        <tr key={id}>
                             {/* <td>#{Math.round(Math.random() * 1000)}</td> */}
                             <td>{brand}</td>
                             <td>
@@ -109,8 +132,18 @@ const ProductsTable = ({ dataToDisplay: productsToDisplay }) => {
                             </td>
                             <td className="quantity__value">{currentQuantity}</td>
                             <td>
-                                <span>Edit</span>
-                                <span>Delete</span>
+                                <div className="actions">
+                                    <button
+                                        onClick={updateProductHandler.bind(null, product)}
+                                        title="Edit"
+                                        className="actions__edit"
+                                    >
+                                        <TiEdit />
+                                    </button>
+                                    <button title="Delete" className="actions__del">
+                                        <MdDelete />
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     );

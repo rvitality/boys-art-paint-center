@@ -7,4 +7,36 @@
     .volume {
         text-transform: none !important;
     }
+
+    .actions {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        position: relative;
+
+        button {
+            cursor: pointer;
+            border: none;
+            outline: none;
+            background: none;
+            filter: brightness(0.9);
+
+            &:hover {
+                filter: brightness(1);
+            }
+        }
+
+        svg {
+            font-size: 2.25rem;
+        }
+
+        &__edit {
+            color: rgb(62, 62, 255);
+        }
+
+        &__del {
+            color: red;
+        }
+    }
 }

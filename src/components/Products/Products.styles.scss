@@ -1,0 +1,25 @@
+.add-item-btn-container {
+    padding: 0 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    &.hide {
+        display: none;
+    }
+
+    &__btn {
+        padding: 1rem 1.5rem;
+        border: 1px solid #7ab876;
+        border-radius: 5px;
+        color: green;
+        font-size: 1.5rem;
+        transition: all 0.15s ease-in-out;
+        cursor: pointer;
+
+        &:hover {
+            color: #fff !important;
+            background-color: #7ab876;
+        }
+    }
+}

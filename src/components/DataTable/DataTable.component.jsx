@@ -11,16 +11,7 @@ import { HiOutlineChevronRight } from "react-icons/hi";
 
 import "./DataTable.styles.scss";
 
-const DataTable = ({
-    categoryName,
-    fetchedData,
-    onFilterBySearch,
-    isLoading,
-    NewItemForm,
-    Table,
-}) => {
-    const [showNewItemForm, setShowNewItemForm] = useState(false);
-
+const DataTable = ({ categoryName, fetchedData, onFilterBySearch, isLoading, Table }) => {
     const [dividedProducts, setDividedProducts] = useState([]);
 
     const [productsToDisplay, setProductsToDisplay] = useState([]);
@@ -97,7 +88,7 @@ const DataTable = ({
     };
 
     useEffect(() => {
-        const productsCopy = [...fetchedData.data];
+        const productsCopy = [...fetchedData];
         setInitialStates(productsCopy);
     }, [fetchedData]);
 
@@ -137,14 +128,7 @@ const DataTable = ({
 
     return (
         <article className="data-table">
-            {NewItemForm && (
-                <NewItemForm
-                    showNewItemForm={showNewItemForm}
-                    onHide={() => setShowNewItemForm(false)}
-                />
-            )}
-
-            <div className={`main-content ${showNewItemForm ? "hide" : ""}`}>
+            <div className="main-content">
                 <h2 className="category-name">{categoryName}</h2>
 
                 <div className="main-content__upper">
@@ -155,17 +139,6 @@ const DataTable = ({
                             placeholder="Filter by value"
                             onChange={searchChangeHandler}
                         />
-                    </div>
-
-                    <div className="add-new">
-                        <button
-                            onClick={() => {
-                                setShowNewItemForm(true);
-                            }}
-                            className="add-item-btn"
-                        >
-                            Add New
-                        </button>
                     </div>
                 </div>
 

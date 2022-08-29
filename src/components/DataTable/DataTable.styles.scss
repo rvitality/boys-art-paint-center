@@ -1,21 +1,6 @@
 .data-table {
     position: relative;
 
-    .add-item-btn {
-        padding: 1rem 1.5rem;
-        border: 1px solid #7ab876;
-        border-radius: 5px;
-        color: green;
-        font-size: 1.5rem;
-        transition: all 0.15s ease-in-out;
-        cursor: pointer;
-
-        &:hover {
-            color: #fff !important;
-            background-color: #7ab876;
-        }
-    }
-
     .main-content {
         &.hide {
             display: none;
@@ -141,61 +126,6 @@
 
         .bold {
             font-weight: bold;
-        }
-    }
-
-    .new-item-container {
-        padding: 2rem 5rem;
-
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 3rem;
-            align-items: flex-start;
-
-            .form-group {
-                display: flex;
-
-                &.divide {
-                    gap: 5rem;
-                }
-
-                &__child-group {
-                    display: flex;
-                }
-
-                .divider {
-                    height: 5rem;
-                    width: 1px;
-                    background: #bbb;
-                    align-self: flex-end;
-                    margin-bottom: 0.5rem;
-                }
-            }
-
-            .form-control {
-                display: flex;
-                flex-direction: column;
-                gap: 0.75rem;
-                margin: 0 1.5rem;
-                width: 230px;
-
-                label {
-                    font-weight: bold;
-                    font-size: 1.5rem;
-                    text-transform: capitalize;
-                }
-
-                input {
-                    font-size: 1.7rem;
-                    padding: 1rem;
-                    font-family: inherit;
-                    border: 2px solid rgba(0, 0, 0, 0.2);
-                    border-radius: 6px;
-                    transition: outline ease-in-out;
-                    outline-color: #287cc0;
-                }
-            }
         }
     }
 }
