@@ -59,8 +59,6 @@ const NewProduct = ({ showNewItemForm, onHide }) => {
             volumeValue,
         };
 
-        console.log(imgFileInput);
-
         uploadNewProduct(product, imgFileInput);
     };
 

@@ -1,0 +1,29 @@
+.logo {
+    font-family: "Aboreto", cursive;
+    font-size: 1.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: brightness(0.8);
+    transition: filter 0.15s ease-in-out;
+
+    &__link {
+        color: #287cc0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    &__icon {
+        width: 5rem;
+        height: 5rem;
+        margin-right: 1rem;
+    }
+
+    &__value {
+        font-weight: bold;
+    }
+
+    &:hover {
+        filter: brightness(1);
+    }
+}

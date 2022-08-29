@@ -137,11 +137,12 @@ const DataTable = ({
 
     return (
         <article className="data-table">
-            <NewItemForm
-                showNewItemForm={showNewItemForm}
-                onHide={() => setShowNewItemForm(false)}
-            />
-            {/* <NewItemForm onHide={() => setShowNewItemForm(false)} /> */}
+            {NewItemForm && (
+                <NewItemForm
+                    showNewItemForm={showNewItemForm}
+                    onHide={() => setShowNewItemForm(false)}
+                />
+            )}
 
             <div className={`main-content ${showNewItemForm ? "hide" : ""}`}>
                 <h2 className="category-name">{categoryName}</h2>
