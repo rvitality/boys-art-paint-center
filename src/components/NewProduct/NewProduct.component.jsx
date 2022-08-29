@@ -1,14 +1,49 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { uploadNewProduct } from "../../utils/firebase/firebase.utils";
 
 import imgPlaceholder from "../../assets/images/img-placeholder.jpg";
 
 import "./NewProduct.styles.scss";
+import { useInfoContext } from "../../store/info-context";
 
 const NewProduct = ({ showNewItemForm, onHide }) => {
+    const { products } = useInfoContext();
+
     const [imgFileInput, setImgFileInput] = useState();
     const [imgFileReaderInput, setImgFileReaderInput] = useState();
+
+    const [isLoading, setIsLoading] = useState();
+
+    const [responseID, setResponseID] = useState("");
+    const [requestStatusMessage, setRequestStatusMessage] = useState({
+        status: "",
+        msg: "",
+    });
+
+    useEffect(() => {
+        if (isLoading === undefined) return;
+
+        // success
+        if (responseID) {
+            setRequestStatusMessage({
+                status: "success",
+                msg: "Product added successfully.",
+            });
+        }
+        // error
+        else {
+            setRequestStatusMessage({ status: "error", msg: "Something went wrong." });
+        }
+
+        const timeout = setTimeout(() => {
+            setRequestStatusMessage({ status: "", msg: "" });
+        }, 2000);
+
+        return () => {
+            clearTimeout(timeout);
+        };
+    }, [isLoading, responseID]);
 
     const brandRef = useRef();
     const nameRef = useRef();
@@ -59,11 +94,39 @@ const NewProduct = ({ showNewItemForm, onHide }) => {
             volumeValue,
         };
 
-        uploadNewProduct(product, imgFileInput);
+        setIsLoading(true);
+        uploadNewProduct(product, imgFileInput).then(res => {
+            setResponseID(res?.id);
+            setIsLoading(false);
+
+            if (res.id) {
+                // products.setProducts(res);
+
+                brandRef.current.value = "";
+                nameRef.current.value = "";
+                typeRef.current.value = "";
+                colorRef.current.value = "";
+                priceRef.current.value = "";
+                stockRef.current.value = "";
+                volumeValueRef.current.value = "";
+                volumeRef.current.value = "";
+                setImgFileReaderInput("");
+            }
+        });
     };
 
     return (
         <section className={`new-item-container ${showNewItemForm ? "show" : ""}`}>
+            {!isLoading && (
+                <div
+                    className={`request-status-msg ${requestStatusMessage.status ? "show" : ""} ${
+                        requestStatusMessage.status
+                    }`}
+                >
+                    <p>{requestStatusMessage.msg}</p>
+                </div>
+            )}
+
             <form onSubmit={submitHandler}>
                 <div
                     className="form-control img-upload-container dog"
@@ -132,7 +195,8 @@ const NewProduct = ({ showNewItemForm, onHide }) => {
                     <button type="button" className="cancel-btn" onClick={onHide}>
                         Cancel
                     </button>
-                    <button type="submit">Add Item</button>
+                    {!isLoading && <button type="submit">Add Item</button>}
+                    {isLoading && <p>Please wait...</p>}
                 </div>
             </form>
         </section>

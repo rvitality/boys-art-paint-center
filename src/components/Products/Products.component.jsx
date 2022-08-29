@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 
-import { getDataAndDocuments } from "../../utils/firebase/firebase.utils";
+import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
+import { db } from "../../utils/firebase/firebase.utils";
+
+// import { getDataAndDocuments } from "../../utils/firebase/firebase.utils";
 import { useInfoContext } from "../../store/info-context";
 
 import DataTable from "../DataTable/DataTable.component";
@@ -10,6 +13,8 @@ import NewProduct from "../NewProduct/NewProduct.component";
 // import "./Products.styles.scss";
 
 const Products = () => {
+    console.log("products");
+
     const { products } = useInfoContext();
 
     const [isLoading, setIsLoading] = useState(false);
@@ -28,23 +33,48 @@ const Products = () => {
         });
     };
 
+    // useEffect(() => {
+    //     const fetchProducts = async () => {
+    //         try {
+    //             setIsLoading(true);
+    //             const res = await getDataAndDocuments("cities");
+    //             if (res.length > 0) {
+    //                 products.setProducts(res);
+    //             }
+    //         } catch (err) {
+    //             console.log(err.message);
+    //         }
+
+    //         setIsLoading(false);
+    //     };
+
+    //     if (products.data.length === 0) {
+    //         fetchProducts();
+    //     }
+    // }, [products]);
+
     useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                setIsLoading(true);
-                const res = await getDataAndDocuments("cities");
-                products.setProducts(res);
-            } catch (err) {
-                console.log(err.message);
+        setIsLoading(true);
+
+        const citiesRef = collection(db, "cities");
+        const queryRequest = query(citiesRef, orderBy("created", "desc"));
+
+        const unsubscribe = onSnapshot(
+            queryRequest,
+            snapshot => {
+                const fetchedProducts = snapshot.docs?.map(docSnapshot => docSnapshot.data());
+                products.setProducts(fetchedProducts);
+                setIsLoading(false);
+            },
+            error => {
+                console.log(error);
             }
+        );
 
-            setIsLoading(false);
+        return () => {
+            unsubscribe();
         };
-
-        if (products.data.length === 0) {
-            fetchProducts();
-        }
-    }, [products]);
+    }, []);
 
     return (
         <DataTable

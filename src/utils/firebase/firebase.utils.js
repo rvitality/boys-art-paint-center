@@ -41,7 +41,7 @@ export const getDataAndDocuments = async collectionName => {
 
     // const snapshot = await getDocs(collectionRef);
 
-    return querySnapshot.docs.map(docSnapshot => docSnapshot.data());
+    return querySnapshot.docs?.map(docSnapshot => docSnapshot.data());
 };
 
 export const addNewProduct = async (product, url) => {
@@ -54,7 +54,8 @@ export const addNewProduct = async (product, url) => {
         ...product,
     });
 
-    console.log("product");
+    // console.log("product");
+    return response;
 };
 
 export const uploadNewProduct = (product, imgUpload) => {
@@ -65,15 +66,16 @@ export const uploadNewProduct = (product, imgUpload) => {
     const storage = getStorage();
     const productImagesRef = ref(storage, `products/${imgUpload.name}`);
 
-    uploadBytes(productImagesRef, imgUpload)
+    return uploadBytes(productImagesRef, imgUpload)
         .then(snapshot => {
-            getDownloadURL(snapshot.ref).then(url => {
-                console.log("image");
-                addNewProduct(product, url);
+            return getDownloadURL(snapshot.ref).then(url => {
+                // console.log("image");
+                return addNewProduct(product, url).then(res => res);
             });
         })
         .catch(err => {
             console.log(err.message);
+            return err.message;
         });
 };
 

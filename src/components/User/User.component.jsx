@@ -31,7 +31,6 @@ const User = () => {
 
     useEffect(() => {
         const checkIfClickedOutside = e => {
-            console.log(e.target);
             // If the menu is open and the clicked target is not within the menu, then close the menu
 
             if (showDropdown && dropdownRef.current && e.target !== buttonRef.current) {
