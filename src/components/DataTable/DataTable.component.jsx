@@ -12,6 +12,7 @@ import { HiOutlineChevronRight } from "react-icons/hi";
 import "./DataTable.styles.scss";
 
 const DataTable = ({ categoryName, fetchedData, onFilterBySearch, Table }) => {
+    console.log(fetchedData);
     const productsCopy = [...fetchedData];
     const chunkData = chunkArray(productsCopy, 10);
 

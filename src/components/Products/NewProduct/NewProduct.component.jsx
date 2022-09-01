@@ -10,14 +10,11 @@ import { productsActions } from "../../../store/products/products-slice";
 
 const NewProduct = ({ onHide }) => {
     const dispatch = useDispatch();
-    const [isLoading, setIsLoading] = useState(false);
 
     const [imgFileInput, setImgFileInput] = useState();
     const [imgFileReaderInput, setImgFileReaderInput] = useState();
 
     const [requestData, setRequestData] = useState({});
-
-    console.log(requestData);
 
     const brandRef = useRef();
     const nameRef = useRef();
@@ -69,11 +66,11 @@ const NewProduct = ({ onHide }) => {
         };
 
         uploadNewProduct(product, imgFileInput)
-            .then(response =>
+            .then(response => {
+                dispatch(productsActions.addProduct({ ...product, id: response.id }));
+
                 setRequestData(prevState => {
                     if (response.id) {
-                        dispatch(productsActions.addProduct({ ...product, id: response.id }));
-
                         brandRef.current.value = "";
                         nameRef.current.value = "";
                         typeRef.current.value = "";
@@ -93,8 +90,8 @@ const NewProduct = ({ onHide }) => {
                     }
 
                     return { ...prevState, status: "error", msg: "Request ID doesn't exist." };
-                })
-            )
+                });
+            })
             .catch(err =>
                 setRequestData(prevState => ({ ...prevState, status: "error", msg: err.message }))
             );

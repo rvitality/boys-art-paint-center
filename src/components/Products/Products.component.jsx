@@ -18,7 +18,6 @@ const Products = () => {
 
     const productItems = useSelector(selectProductItems);
     console.log("PRODUCTS: ", productItems);
-
     const productsStatus = useSelector(state => state.products.status);
     const productsError = useSelector(state => state.products.error);
 
