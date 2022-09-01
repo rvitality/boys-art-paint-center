@@ -1,17 +1,34 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { fetchProducts } from "./products-actions";
 
 const initialState = {
     productItems: [],
-    currentEdit: {},
+    status: "idle",
+    error: {},
 };
 
 const productsSlice = createSlice({
     name: "products",
     initialState,
     reducers: {
-        setProducts(state, action) {
-            state.productItems = action.payload;
+        addProduct(state, action) {
+            console.log(action.payload);
+            state.productItems = [...state.productItems, action.payload];
         },
+    },
+    extraReducers(builder) {
+        builder
+            .addCase(fetchProducts.pending, (state, action) => {
+                state.status = "loading";
+            })
+            .addCase(fetchProducts.fulfilled, (state, action) => {
+                state.status = "succeeded";
+                state.productItems = action.payload;
+            })
+            .addCase(fetchProducts.rejected, (state, action) => {
+                state.status = "failed";
+                state.error = { title: "Error!", message: action.error.message };
+            });
     },
 });
 

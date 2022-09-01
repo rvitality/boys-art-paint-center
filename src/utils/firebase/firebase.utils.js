@@ -83,7 +83,7 @@ export const addNewProduct = async (product, url) => {
 export const uploadNewProduct = (product, imgUpload) => {
     if (!imgUpload) return;
 
-    // ! upload img first to storage to get the download url before adding the new product to firestore db
+    // ! upload the img first to storage to get the download url before adding the new product to firestore db
 
     const storage = getStorage();
     const productImagesRef = ref(storage, `products/${imgUpload.name}`);

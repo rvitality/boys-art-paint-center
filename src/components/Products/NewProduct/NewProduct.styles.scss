@@ -1,16 +1,16 @@
 .new-item-container {
-    opacity: 0;
-    height: 0;
-    pointer-events: none;
+    // opacity: 0;
+    // height: 0;
+    // pointer-events: none;
     transition: opacity 0.25s ease-in-out;
     position: relative;
+    padding: 2rem 5rem;
 
-    &.show {
-        padding: 2rem 5rem;
-        pointer-events: all;
-        height: auto;
-        opacity: 1;
-    }
+    // &.show {
+    //     pointer-events: all;
+    //     height: auto;
+    //     opacity: 1;
+    // }
 
     form {
         display: flex;
@@ -66,10 +66,10 @@
         width: fit-content;
         color: #fff;
         position: absolute;
-        right: 0;
-        transition: opacity 0.2s ease-in-out;
+        right: 5rem;
+        // transition: opacity 0.2s ease-in-out;
         padding: 2rem;
-        opacity: 0;
+        // opacity: 0;
 
         &.show {
             opacity: 1;

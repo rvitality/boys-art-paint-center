@@ -1,23 +1,23 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 
-import { uploadNewProduct } from "../../utils/firebase/firebase.utils";
-import { useInfoContext } from "../../store/info-context";
+import { uploadNewProduct } from "../../../utils/firebase/firebase.utils";
 
-import imgPlaceholder from "../../assets/images/img-placeholder.jpg";
+import imgPlaceholder from "../../../assets/images/img-placeholder.jpg";
 
 import "./NewProduct.styles.scss";
+import { productsActions } from "../../../store/products/products-slice";
 
-const NewProduct = ({ showNewItemForm, onHide }) => {
+const NewProduct = ({ onHide }) => {
+    const dispatch = useDispatch();
+    const [isLoading, setIsLoading] = useState(false);
+
     const [imgFileInput, setImgFileInput] = useState();
     const [imgFileReaderInput, setImgFileReaderInput] = useState();
 
-    const [isLoading, setIsLoading] = useState();
+    const [requestData, setRequestData] = useState({});
 
-    const [responseID, setResponseID] = useState("");
-    const [requestStatusMessage, setRequestStatusMessage] = useState({
-        status: "",
-        msg: "",
-    });
+    console.log(requestData);
 
     const brandRef = useRef();
     const nameRef = useRef();
@@ -27,30 +27,6 @@ const NewProduct = ({ showNewItemForm, onHide }) => {
     const stockRef = useRef();
     const volumeValueRef = useRef();
     const volumeRef = useRef();
-
-    useEffect(() => {
-        if (isLoading === undefined) return;
-
-        // success
-        if (responseID) {
-            setRequestStatusMessage({
-                status: "success",
-                msg: "Product added successfully.",
-            });
-        }
-        // error
-        else {
-            setRequestStatusMessage({ status: "error", msg: "Something went wrong." });
-        }
-
-        const timeout = setTimeout(() => {
-            setRequestStatusMessage({ status: "", msg: "" });
-        }, 2000);
-
-        return () => {
-            clearTimeout(timeout);
-        };
-    }, [isLoading, responseID]);
 
     const fileReader = new FileReader();
 
@@ -92,42 +68,49 @@ const NewProduct = ({ showNewItemForm, onHide }) => {
             volumeValue,
         };
 
-        setIsLoading(true);
-        uploadNewProduct(product, imgFileInput).then(res => {
-            setResponseID(res?.id);
-            setIsLoading(false);
+        uploadNewProduct(product, imgFileInput)
+            .then(response =>
+                setRequestData(prevState => {
+                    if (response.id) {
+                        dispatch(productsActions.addProduct({ ...product, id: response.id }));
 
-            if (res.id) {
-                // products.setProducts(res);
+                        brandRef.current.value = "";
+                        nameRef.current.value = "";
+                        typeRef.current.value = "";
+                        colorRef.current.value = "";
+                        priceRef.current.value = "";
+                        stockRef.current.value = "";
+                        volumeValueRef.current.value = "";
+                        volumeRef.current.value = "";
+                        setImgFileReaderInput("");
 
-                brandRef.current.value = "";
-                nameRef.current.value = "";
-                typeRef.current.value = "";
-                colorRef.current.value = "";
-                priceRef.current.value = "";
-                stockRef.current.value = "";
-                volumeValueRef.current.value = "";
-                volumeRef.current.value = "";
-                setImgFileReaderInput("");
-            }
-        });
+                        return {
+                            ...prevState,
+                            id: response.id,
+                            status: "success",
+                            msg: "Product added successfully.",
+                        };
+                    }
+
+                    return { ...prevState, status: "error", msg: "Request ID doesn't exist." };
+                })
+            )
+            .catch(err =>
+                setRequestData(prevState => ({ ...prevState, status: "error", msg: err.message }))
+            );
     };
 
     return (
-        <section className={`new-item-container ${showNewItemForm ? "show" : ""}`}>
-            {!isLoading && (
-                <div
-                    className={`request-status-msg ${requestStatusMessage.status ? "show" : ""} ${
-                        requestStatusMessage.status
-                    }`}
-                >
-                    <p>{requestStatusMessage.msg}</p>
+        <section className="new-item-container">
+            {requestData && (
+                <div className={`request-status-msg  ${requestData.status}`}>
+                    <p>{requestData.msg}</p>
                 </div>
             )}
 
             <form onSubmit={submitHandler}>
                 <div
-                    className="form-control img-upload-container dog"
+                    className="form-control img-upload-container"
                     style={{
                         backgroundImage: `url(${
                             imgFileReaderInput ? imgFileReaderInput : imgPlaceholder
@@ -135,7 +118,6 @@ const NewProduct = ({ showNewItemForm, onHide }) => {
                     }}
                 >
                     <input onChange={imgChangeHandler} type="file" accept="image/png, image/jpeg" />
-                    {/* <img className="product-img" src={imgFileReaderInput} alt="" /> */}
                 </div>
                 <div className="form-control">
                     <label htmlFor="brand">Brand</label>
@@ -193,8 +175,7 @@ const NewProduct = ({ showNewItemForm, onHide }) => {
                     <button type="button" className="cancel-btn" onClick={onHide}>
                         Cancel
                     </button>
-                    {!isLoading && <button type="submit"> Add Item</button>}
-                    {isLoading && <p>Please wait...</p>}
+                    <button type="submit"> Add Item</button>
                 </div>
             </form>
         </section>

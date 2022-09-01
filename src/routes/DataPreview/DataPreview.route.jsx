@@ -9,7 +9,6 @@ import Orders from "../../components/Orders/Orders.component";
 import Customers from "../../components/Customers/Customers.component";
 
 import "./DataPreview.styles.scss";
-import NewProduct from "../../components/NewProduct/NewProduct.component";
 
 const DataPreview = () => {
     return (

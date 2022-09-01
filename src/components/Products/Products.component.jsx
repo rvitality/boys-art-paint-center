@@ -1,23 +1,36 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { fetchProductsData } from "../../store/products/products-actions";
+import { fetchProducts } from "../../store/products/products-actions";
+import { selectProductItems } from "../../store/products/products-selector";
 
 import DataTable from "../DataTable/DataTable.component";
 import ProductsTable from "./ProductsTable/ProductsTable.component";
-import NewProduct from "../NewProduct/NewProduct.component";
+import NewProduct from "./NewProduct/NewProduct.component";
+import Error from "../Error/Error.component";
 
 import "./Products.styles.scss";
+import Spinner from "../../UI/Spinner/Spinner.component";
 
 const Products = () => {
     const [showNewItemForm, setShowNewItemForm] = useState(false);
-
-    const products = useSelector(state => state.products.productItems);
-    console.log(products);
-
     const dispatch = useDispatch();
 
-    const [isLoading, setIsLoading] = useState(false);
+    const productItems = useSelector(selectProductItems);
+    console.log("PRODUCTS: ", productItems);
+
+    const productsStatus = useSelector(state => state.products.status);
+    const productsError = useSelector(state => state.products.error);
+
+    const hasError = productsStatus === "failed";
+    const productsIsLoading = productsStatus === "loading";
+
+    useEffect(() => {
+        if (productsStatus === "idle") {
+            console.log("FETCH PRODUCTS");
+            dispatch(fetchProducts());
+        }
+    }, [productsStatus, dispatch]);
 
     const filterBySearchHandler = (data, inputValue) => {
         if (!data) return;
@@ -33,18 +46,26 @@ const Products = () => {
         });
     };
 
-    useEffect(() => {
-        if (products.length === 0) {
-            dispatch(fetchProductsData());
-        }
-    }, [products.length, dispatch]);
+    let mainContent;
+
+    if (hasError) {
+        mainContent = <Error {...productsError} />;
+    } else if (productsIsLoading) {
+        mainContent = <Spinner />;
+    } else {
+        mainContent = (
+            <DataTable
+                categoryName="Products"
+                fetchedData={productItems}
+                onFilterBySearch={filterBySearchHandler}
+                Table={ProductsTable}
+            />
+        );
+    }
 
     return (
         <>
-            <NewProduct
-                showNewItemForm={showNewItemForm}
-                onHide={() => setShowNewItemForm(false)}
-            />
+            {showNewItemForm && <NewProduct onHide={() => setShowNewItemForm(false)} />}
 
             <div className={`add-item-btn-container ${showNewItemForm ? "hide" : ""}`}>
                 <button
@@ -57,13 +78,7 @@ const Products = () => {
                 </button>
             </div>
 
-            <DataTable
-                categoryName="Products"
-                fetchedData={products}
-                onFilterBySearch={filterBySearchHandler}
-                isLoading={isLoading}
-                Table={ProductsTable}
-            />
+            {mainContent}
         </>
     );
 };

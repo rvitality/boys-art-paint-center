@@ -22,7 +22,8 @@ const ProductsTable = ({ dataToDisplay: productsToDisplay }) => {
 
     const sortHandler = sortedData => setProducts(sortedData);
 
-    const updateProductHandler = async product => {
+    const updateProductHandler = product => {
+        console.log(product);
         // console.log("here");
         // currentProductEdit.setCurrentProductEdit(prevState => ({
         //     ...prevState,
