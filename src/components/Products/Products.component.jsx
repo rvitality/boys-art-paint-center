@@ -13,11 +13,13 @@ import "./Products.styles.scss";
 import Spinner from "../../UI/Spinner/Spinner.component";
 
 const Products = () => {
-    const [showNewItemForm, setShowNewItemForm] = useState(false);
     const dispatch = useDispatch();
+
+    const [showNewItemForm, setShowNewItemForm] = useState(false);
 
     const productItems = useSelector(selectProductItems);
     console.log("PRODUCTS: ", productItems);
+
     const productsStatus = useSelector(state => state.products.status);
     const productsError = useSelector(state => state.products.error);
 
@@ -26,7 +28,6 @@ const Products = () => {
 
     useEffect(() => {
         if (productsStatus === "idle") {
-            console.log("FETCH PRODUCTS");
             dispatch(fetchProducts());
         }
     }, [productsStatus, dispatch]);
@@ -35,8 +36,9 @@ const Products = () => {
         if (!data) return;
 
         return data.filter(product => {
-            const { name, color, type, volume } = product;
+            const { brand, name, color, type, volume } = product;
             return (
+                brand.toLowerCase().includes(inputValue) ||
                 name.toLowerCase().includes(inputValue) ||
                 color.toLowerCase().includes(inputValue) ||
                 type.toLowerCase().includes(inputValue) ||

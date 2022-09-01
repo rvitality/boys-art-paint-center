@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Spinner from "../../UI/Spinner/Spinner.component";
 
@@ -12,11 +12,14 @@ import { HiOutlineChevronRight } from "react-icons/hi";
 import "./DataTable.styles.scss";
 
 const DataTable = ({ categoryName, fetchedData, onFilterBySearch, Table }) => {
-    console.log(fetchedData);
     const productsCopy = [...fetchedData];
     const chunkData = chunkArray(productsCopy, 10);
 
     const [productsToDisplay, setProductsToDisplay] = useState(chunkData[0]);
+
+    useEffect(() => {
+        setProductsToDisplay(chunkData[0]);
+    }, [fetchedData]);
 
     const [paginationArray, setPaginationArray] = useState(getPageArrayInitialState(chunkData));
     const [paginationSetIndex, setPaginationSetIndex] = useState(1);

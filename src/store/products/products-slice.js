@@ -12,8 +12,9 @@ const productsSlice = createSlice({
     initialState,
     reducers: {
         addProduct(state, action) {
-            console.log(action.payload);
-            state.productItems = [...state.productItems, action.payload];
+            console.log("PAYLOAD:  ", action.payload);
+            state.productItems = [action.payload, ...state.productItems];
+            // state.productItems = state.productItems.unshift(action.payload);
         },
     },
     extraReducers(builder) {

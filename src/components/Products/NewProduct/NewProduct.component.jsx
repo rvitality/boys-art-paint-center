@@ -67,30 +67,37 @@ const NewProduct = ({ onHide }) => {
 
         uploadNewProduct(product, imgFileInput)
             .then(response => {
-                dispatch(productsActions.addProduct({ ...product, id: response.id }));
+                const { requestID, imageUrl } = response;
+                console.log(response);
 
-                setRequestData(prevState => {
-                    if (response.id) {
-                        brandRef.current.value = "";
-                        nameRef.current.value = "";
-                        typeRef.current.value = "";
-                        colorRef.current.value = "";
-                        priceRef.current.value = "";
-                        stockRef.current.value = "";
-                        volumeValueRef.current.value = "";
-                        volumeRef.current.value = "";
-                        setImgFileReaderInput("");
+                if (requestID) {
+                    dispatch(productsActions.addProduct({ ...product, id: requestID, imageUrl }));
 
-                        return {
-                            ...prevState,
-                            id: response.id,
-                            status: "success",
-                            msg: "Product added successfully.",
-                        };
-                    }
+                    setRequestData(prevState => ({
+                        ...prevState,
+                        id: response.id,
+                        status: "success",
+                        msg: "Product added successfully.",
+                    }));
 
-                    return { ...prevState, status: "error", msg: "Request ID doesn't exist." };
-                });
+                    // clear fields
+
+                    brandRef.current.value = "";
+                    nameRef.current.value = "";
+                    typeRef.current.value = "";
+                    colorRef.current.value = "";
+                    priceRef.current.value = "";
+                    stockRef.current.value = "";
+                    volumeValueRef.current.value = "";
+                    volumeRef.current.value = "";
+                    setImgFileReaderInput("");
+                } else {
+                    setRequestData(prevState => ({
+                        ...prevState,
+                        status: "error",
+                        msg: "Request ID doesn't exist.",
+                    }));
+                }
             })
             .catch(err =>
                 setRequestData(prevState => ({ ...prevState, status: "error", msg: err.message }))
@@ -98,7 +105,7 @@ const NewProduct = ({ onHide }) => {
     };
 
     return (
-        <section className="new-item-container">
+        <div className="new-item-container">
             {requestData && (
                 <div className={`request-status-msg  ${requestData.status}`}>
                     <p>{requestData.msg}</p>
@@ -175,7 +182,7 @@ const NewProduct = ({ onHide }) => {
                     <button type="submit"> Add Item</button>
                 </div>
             </form>
-        </section>
+        </div>
     );
 };
 

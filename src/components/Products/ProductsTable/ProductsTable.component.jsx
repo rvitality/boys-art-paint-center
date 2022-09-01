@@ -11,6 +11,7 @@ import { MdDelete } from "react-icons/md";
 import "./ProductsTable.styles.scss";
 
 const ProductsTable = ({ dataToDisplay: productsToDisplay }) => {
+    console.log("PRODCTS TABLE");
     // const { currentProductEdit } = useInfoContext();
     // console.log(currentProductEdit);
 
@@ -22,8 +23,11 @@ const ProductsTable = ({ dataToDisplay: productsToDisplay }) => {
 
     const sortHandler = sortedData => setProducts(sortedData);
 
-    const updateProductHandler = product => {
+    const updateProductHandler = async product => {
         console.log(product);
+
+        console.log(await updateDocument("cities", product));
+
         // console.log("here");
         // currentProductEdit.setCurrentProductEdit(prevState => ({
         //     ...prevState,

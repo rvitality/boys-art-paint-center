@@ -1,5 +1,4 @@
 import { initializeApp } from "firebase/app";
-
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
@@ -13,6 +12,7 @@ import {
     query,
     getDocs,
     serverTimestamp,
+    orderBy,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -33,11 +33,11 @@ export const auth = getAuth();
 
 export const db = getFirestore();
 
-export const getProductDocuments = async (collectionName = "products") => {
+export const getProductDocuments = async (collectionName = "cities") => {
     if (!collectionName) return;
 
     const collectionRef = collection(db, collectionName);
-    const q = query(collectionRef);
+    const q = query(collectionRef, orderBy("updated", "desc"));
 
     const querySnapshot = await getDocs(q);
 
@@ -92,7 +92,10 @@ export const uploadNewProduct = (product, imgUpload) => {
         .then(snapshot => {
             return getDownloadURL(snapshot.ref).then(url => {
                 // console.log("image");
-                return addNewProduct(product, url).then(res => res);
+                return addNewProduct(product, url).then(res => ({
+                    requestID: res.id,
+                    imageUrl: url,
+                }));
             });
         })
         .catch(err => {
