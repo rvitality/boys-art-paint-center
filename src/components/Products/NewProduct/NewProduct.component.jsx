@@ -5,8 +5,10 @@ import { uploadNewProduct } from "../../../utils/firebase/firebase.utils";
 
 import imgPlaceholder from "../../../assets/images/img-placeholder.jpg";
 
-import "./NewProduct.styles.scss";
 import { productsActions } from "../../../store/products/products-slice";
+import { uploadProduct } from "../../../store/products/products-actions";
+
+import "./NewProduct.styles.scss";
 
 const NewProduct = ({ onHide }) => {
     const dispatch = useDispatch();
@@ -65,43 +67,50 @@ const NewProduct = ({ onHide }) => {
             volumeValue,
         };
 
-        uploadNewProduct(product, imgFileInput)
-            .then(response => {
-                const { requestID, imageUrl } = response;
-                console.log(response);
+        dispatch(uploadProduct({ product, imgFileInput })).then(response => {
+            console.log(response);
+            const { requestId, requestStatus } = response.meta;
+            if (requestStatus === "fulfilled") {
+            }
+        });
 
-                if (requestID) {
-                    dispatch(productsActions.addProduct({ ...product, id: requestID, imageUrl }));
+        // uploadNewProduct(product, imgFileInput)
+        //     .then(response => {
+        //         const { requestID, imageUrl } = response;
+        //         console.log(response);
 
-                    setRequestData(prevState => ({
-                        ...prevState,
-                        id: response.id,
-                        status: "success",
-                        msg: "Product added successfully.",
-                    }));
+        //         if (requestID) {
+        //             dispatch(productsActions.addProduct({ ...product, id: requestID, imageUrl }));
 
-                    // clear fields
+        //             setRequestData(prevState => ({
+        //                 ...prevState,
+        //                 id: response.id,
+        //                 status: "success",
+        //                 msg: "Product added successfully.",
+        //             }));
 
-                    brandRef.current.value = "";
-                    nameRef.current.value = "";
-                    typeRef.current.value = "";
-                    colorRef.current.value = "";
-                    priceRef.current.value = "";
-                    stockRef.current.value = "";
-                    volumeValueRef.current.value = "";
-                    volumeRef.current.value = "";
-                    setImgFileReaderInput("");
-                } else {
-                    setRequestData(prevState => ({
-                        ...prevState,
-                        status: "error",
-                        msg: "Request ID doesn't exist.",
-                    }));
-                }
-            })
-            .catch(err =>
-                setRequestData(prevState => ({ ...prevState, status: "error", msg: err.message }))
-            );
+        //             // clear fields
+
+        //             brandRef.current.value = "";
+        //             nameRef.current.value = "";
+        //             typeRef.current.value = "";
+        //             colorRef.current.value = "";
+        //             priceRef.current.value = "";
+        //             stockRef.current.value = "";
+        //             volumeValueRef.current.value = "";
+        //             volumeRef.current.value = "";
+        //             setImgFileReaderInput("");
+        //         } else {
+        //             setRequestData(prevState => ({
+        //                 ...prevState,
+        //                 status: "error",
+        //                 msg: "Request ID doesn't exist.",
+        //             }));
+        //         }
+        //     })
+        //     .catch(err =>
+        //         setRequestData(prevState => ({ ...prevState, status: "error", msg: err.message }))
+        //     );
     };
 
     return (

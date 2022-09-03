@@ -1,7 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit";
 
 export const selectProductsData = state => {
-    // console.log("selector 1 fired: ", state);
     return state.products;
 };
 
@@ -10,18 +9,12 @@ export const selectProductItems = createSelector(
     productsSlice => productsSlice.productItems
 );
 
-export const selectProductsIsLoading = createSelector(
+export const selectFetchProductStatus = createSelector(
     [selectProductsData],
-    productsSlice => productsSlice.isLoading
+    productsSlice => productsSlice.fetchProductsStatus
 );
 
-export const selectProductsError = createSelector(
+export const selectFetchProductError = createSelector(
     [selectProductsData],
-    productsSlice => productsSlice.error
+    productsSlice => productsSlice.fetchProductsError
 );
-
-// ! ----------------------
-// try
-// export const selectEditProductItem = (state, editProductID) => {
-//     return state.products.productItems.find(item => item.id === editProductID);
-// };

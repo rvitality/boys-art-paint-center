@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { fetchProducts } from "../../store/products/products-actions";
-import { selectProductItems } from "../../store/products/products-selector";
+import {
+    selectProductItems,
+    selectFetchProductStatus,
+    selectFetchProductError,
+} from "../../store/products/products-selector";
 
 import DataTable from "../DataTable/DataTable.component";
 import ProductsTable from "./ProductsTable/ProductsTable.component";
@@ -18,10 +22,10 @@ const Products = () => {
     const [showNewItemForm, setShowNewItemForm] = useState(false);
 
     const productItems = useSelector(selectProductItems);
-    console.log("PRODUCTS: ", productItems);
+    const productsStatus = useSelector(selectFetchProductStatus);
+    const productsError = useSelector(selectFetchProductError);
 
-    const productsStatus = useSelector(state => state.products.status);
-    const productsError = useSelector(state => state.products.error);
+    console.log("PRODUCTS: ", productItems);
 
     const hasError = productsStatus === "failed";
     const productsIsLoading = productsStatus === "loading";
