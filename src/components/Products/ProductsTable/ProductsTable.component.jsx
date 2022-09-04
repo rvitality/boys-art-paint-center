@@ -2,18 +2,15 @@ import React, { useEffect, useState } from "react";
 
 import SortAbleTableHeader from "../../SortAbleTableHeader/SortAbleTableHeader.component";
 
-import { updateDocument } from "../../../utils/firebase/firebase.utils";
-import { useInfoContext } from "../../../store/info-context";
-
 import { TiEdit } from "react-icons/ti";
 import { MdDelete } from "react-icons/md";
 
 import "./ProductsTable.styles.scss";
+import { useDispatch } from "react-redux";
+import { setProductEdit } from "../../../store/products/products-actions";
 
 const ProductsTable = ({ dataToDisplay: productsToDisplay }) => {
-    console.log("PRODCTS TABLE");
-    // const { currentProductEdit } = useInfoContext();
-    // console.log(currentProductEdit);
+    const dispatch = useDispatch();
 
     const [products, setProducts] = useState([]);
 
@@ -23,10 +20,11 @@ const ProductsTable = ({ dataToDisplay: productsToDisplay }) => {
 
     const sortHandler = sortedData => setProducts(sortedData);
 
-    const updateProductHandler = async product => {
+    const updateProductHandler = product => {
         console.log(product);
+        dispatch(setProductEdit(product));
 
-        console.log(await updateDocument("cities", product));
+        // await updateDocument("cities", product)
 
         // console.log("here");
         // currentProductEdit.setCurrentProductEdit(prevState => ({
@@ -138,16 +136,17 @@ const ProductsTable = ({ dataToDisplay: productsToDisplay }) => {
                             <td className="quantity__value">{currentQuantity}</td>
                             <td>
                                 <div className="actions">
-                                    <button
+                                    <a
+                                        href="#new-product"
                                         onClick={updateProductHandler.bind(null, product)}
                                         title="Edit"
                                         className="actions__edit"
                                     >
                                         <TiEdit />
-                                    </button>
-                                    <button title="Delete" className="actions__del">
+                                    </a>
+                                    <a href="#" title="Delete" className="actions__del">
                                         <MdDelete />
-                                    </button>
+                                    </a>
                                 </div>
                             </td>
                         </tr>

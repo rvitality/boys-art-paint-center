@@ -1,5 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { getProductDocuments, uploadNewProduct } from "../../utils/firebase/firebase.utils";
+import {
+    getProductDocuments,
+    updateDocument,
+    uploadNewProduct,
+} from "../../utils/firebase/firebase.utils";
+import { productsActions } from "./products-slice";
 
 export const fetchProducts = createAsyncThunk(
     "products/fetchProducts",
@@ -19,11 +24,13 @@ export const fetchProducts = createAsyncThunk(
 );
 
 export const uploadProduct = createAsyncThunk(
-    "products",
+    "products/uploadProduct",
     async ({ product, imgFileInput }, { rejectWithValue }) => {
         try {
             const response = await uploadNewProduct(product, imgFileInput);
-            return response;
+            const { requestID, imageUrl } = response;
+
+            return { ...product, id: requestID, imageUrl };
         } catch (error) {
             console.log(error);
             const message =
@@ -31,6 +38,20 @@ export const uploadProduct = createAsyncThunk(
                 error.message ||
                 error.toString();
             return rejectWithValue(message);
+        }
+    }
+);
+
+export const setProductEdit = product => productsActions.setCurrentEdit(product);
+
+export const updateProduct = createAsyncThunk(
+    "products/updateProduct",
+    async ({ collectionName = "cities", product, imgFileInput }) => {
+        try {
+            const response = await updateDocument(collectionName, product, imgFileInput);
+            return response;
+        } catch (err) {
+            console.log(err);
         }
     }
 );

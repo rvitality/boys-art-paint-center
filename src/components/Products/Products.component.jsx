@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { fetchProducts } from "../../store/products/products-actions";
+import { fetchProducts, setProductEdit } from "../../store/products/products-actions";
 import {
     selectProductItems,
     selectFetchProductStatus,
     selectFetchProductError,
+    selectCurrentEdit,
 } from "../../store/products/products-selector";
 
 import DataTable from "../DataTable/DataTable.component";
@@ -26,6 +27,9 @@ const Products = () => {
     const productsError = useSelector(selectFetchProductError);
 
     console.log("PRODUCTS: ", productItems);
+
+    const currentProductEdit = useSelector(selectCurrentEdit);
+    const currentProductEditExists = Object.keys(currentProductEdit).length > 0;
 
     const hasError = productsStatus === "failed";
     const productsIsLoading = productsStatus === "loading";
@@ -70,17 +74,27 @@ const Products = () => {
 
     return (
         <>
-            {showNewItemForm && <NewProduct onHide={() => setShowNewItemForm(false)} />}
+            {(showNewItemForm || currentProductEditExists) && (
+                <NewProduct
+                    currentProductEdit={currentProductEdit}
+                    onHide={() => {
+                        dispatch(setProductEdit({}));
+                        setShowNewItemForm(false);
+                    }}
+                />
+            )}
 
             <div className={`add-item-btn-container ${showNewItemForm ? "hide" : ""}`}>
-                <button
-                    onClick={() => {
-                        setShowNewItemForm(true);
-                    }}
-                    className="add-item-btn-container__btn"
-                >
-                    Add New
-                </button>
+                {!currentProductEditExists && (
+                    <button
+                        onClick={() => {
+                            setShowNewItemForm(true);
+                        }}
+                        className="add-item-btn-container__btn"
+                    >
+                        Add New
+                    </button>
+                )}
             </div>
 
             {mainContent}

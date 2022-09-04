@@ -1,22 +1,39 @@
 import React, { useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-import { uploadNewProduct } from "../../../utils/firebase/firebase.utils";
+import {
+    selectUploadProductError,
+    selectUploadProductStatus,
+} from "../../../store/products/products-selector";
+import { updateProduct, uploadProduct } from "../../../store/products/products-actions";
 
 import imgPlaceholder from "../../../assets/images/img-placeholder.jpg";
-
-import { productsActions } from "../../../store/products/products-slice";
-import { uploadProduct } from "../../../store/products/products-actions";
-
 import "./NewProduct.styles.scss";
 
-const NewProduct = ({ onHide }) => {
+const NewProduct = ({ currentProductEdit = {}, onHide }) => {
+    const {
+        brand,
+        color,
+        currentQuantity: stock,
+        imageUrl,
+        name,
+        price,
+        type,
+        volume,
+        volumeValue,
+    } = currentProductEdit;
+
+    // console.log(currentProductEdit);
+
+    const actionType = Object.keys(currentProductEdit).length > 0 ? "edit" : "add";
+
     const dispatch = useDispatch();
 
-    const [imgFileInput, setImgFileInput] = useState();
-    const [imgFileReaderInput, setImgFileReaderInput] = useState();
+    const uploadProductStatus = useSelector(selectUploadProductStatus);
+    const uploadProductError = useSelector(selectUploadProductError);
 
-    const [requestData, setRequestData] = useState({});
+    const [imgFileInput, setImgFileInput] = useState(imageUrl);
+    const [imgFileReaderInput, setImgFileReaderInput] = useState();
 
     const brandRef = useRef();
     const nameRef = useRef();
@@ -67,57 +84,62 @@ const NewProduct = ({ onHide }) => {
             volumeValue,
         };
 
-        dispatch(uploadProduct({ product, imgFileInput })).then(response => {
-            console.log(response);
-            const { requestId, requestStatus } = response.meta;
-            if (requestStatus === "fulfilled") {
+        if (uploadProductStatus === "idle" && actionType === "add") {
+            dispatch(uploadProduct({ product, imgFileInput })).then(response => {
+                const { requestStatus } = response.meta;
+                if (requestStatus === "fulfilled") {
+                    brandRef.current.value = "";
+                    nameRef.current.value = "";
+                    typeRef.current.value = "";
+                    colorRef.current.value = "";
+                    priceRef.current.value = "";
+                    stockRef.current.value = "";
+                    volumeValueRef.current.value = "";
+                    volumeRef.current.value = "";
+                    setImgFileReaderInput("");
+                }
+            });
+        } else if (actionType === "edit") {
+            const newEditProduct = { ...product, id: currentProductEdit.id, imageUrl };
+
+            // check if img has been changed
+            if (imageUrl !== imgFileInput) {
+                dispatch(updateProduct({ product: newEditProduct, imgFileInput })).then(
+                    response => {
+                        console.log("response: ", response);
+                    }
+                );
+            } else {
+                dispatch(updateProduct({ product: newEditProduct, imgFileInput: "retain" })).then(
+                    response => {
+                        console.log("response: ", response);
+                    }
+                );
             }
-        });
-
-        // uploadNewProduct(product, imgFileInput)
-        //     .then(response => {
-        //         const { requestID, imageUrl } = response;
-        //         console.log(response);
-
-        //         if (requestID) {
-        //             dispatch(productsActions.addProduct({ ...product, id: requestID, imageUrl }));
-
-        //             setRequestData(prevState => ({
-        //                 ...prevState,
-        //                 id: response.id,
-        //                 status: "success",
-        //                 msg: "Product added successfully.",
-        //             }));
-
-        //             // clear fields
-
-        //             brandRef.current.value = "";
-        //             nameRef.current.value = "";
-        //             typeRef.current.value = "";
-        //             colorRef.current.value = "";
-        //             priceRef.current.value = "";
-        //             stockRef.current.value = "";
-        //             volumeValueRef.current.value = "";
-        //             volumeRef.current.value = "";
-        //             setImgFileReaderInput("");
-        //         } else {
-        //             setRequestData(prevState => ({
-        //                 ...prevState,
-        //                 status: "error",
-        //                 msg: "Request ID doesn't exist.",
-        //             }));
-        //         }
-        //     })
-        //     .catch(err =>
-        //         setRequestData(prevState => ({ ...prevState, status: "error", msg: err.message }))
-        //     );
+        }
     };
 
+    const uploadProductStatusMessage =
+        uploadProductStatus === "succeeded"
+            ? "Product added successfully."
+            : uploadProductError.message;
+
+    console.log("uploadProductStatusMessage: ", uploadProductStatusMessage);
+
+    let productStyleDisplayImg;
+    if (imgFileReaderInput) {
+        productStyleDisplayImg = imgFileReaderInput;
+    } else if (imageUrl) {
+        productStyleDisplayImg = imageUrl;
+    } else {
+        productStyleDisplayImg = imgPlaceholder;
+    }
+
     return (
-        <div className="new-item-container">
-            {requestData && (
-                <div className={`request-status-msg  ${requestData.status}`}>
-                    <p>{requestData.msg}</p>
+        <div className="new-item-container" id="new-product">
+            {uploadProductStatus && (
+                <div className={`request-status-msg  ${uploadProductStatus}`}>
+                    <p>{uploadProductStatusMessage}</p>
                 </div>
             )}
 
@@ -125,32 +147,30 @@ const NewProduct = ({ onHide }) => {
                 <div
                     className="form-control img-upload-container"
                     style={{
-                        backgroundImage: `url(${
-                            imgFileReaderInput ? imgFileReaderInput : imgPlaceholder
-                        })`,
+                        backgroundImage: `url(${productStyleDisplayImg})`,
                     }}
                 >
                     <input onChange={imgChangeHandler} type="file" accept="image/png, image/jpeg" />
                 </div>
                 <div className="form-control">
                     <label htmlFor="brand">Brand</label>
-                    <input type="text" id="brand" ref={brandRef} />
+                    <input type="text" id="brand" ref={brandRef} defaultValue={brand} />
                 </div>
 
                 <div className="form-group">
                     <div className="form-control">
                         <label htmlFor="name">Name</label>
-                        <input type="text" id="name" ref={nameRef} required />
+                        <input type="text" id="name" ref={nameRef} defaultValue={name} required />
                     </div>
 
                     <div className="form-control">
                         <label htmlFor="type">Type</label>
-                        <input type="text" id="type" ref={typeRef} />
+                        <input type="text" id="type" ref={typeRef} defaultValue={type} />
                     </div>
 
                     <div className="form-control">
                         <label htmlFor="color">Color</label>
-                        <input type="text" id="color" ref={colorRef} />
+                        <input type="text" id="color" ref={colorRef} defaultValue={color} />
                     </div>
                 </div>
 
@@ -158,11 +178,25 @@ const NewProduct = ({ onHide }) => {
                     <div className="form-group__child-group">
                         <div className="form-control">
                             <label htmlFor="price">Price</label>
-                            <input type="number" min={1} id="price" ref={priceRef} required />
+                            <input
+                                type="number"
+                                min={1}
+                                id="price"
+                                ref={priceRef}
+                                defaultValue={price}
+                                required
+                            />
                         </div>
                         <div className="form-control">
                             <label htmlFor="stock">Stock</label>
-                            <input type="number" min={1} id="stock" ref={stockRef} required />
+                            <input
+                                type="number"
+                                min={1}
+                                id="stock"
+                                ref={stockRef}
+                                defaultValue={stock}
+                                required
+                            />
                         </div>
                     </div>
 
@@ -171,7 +205,13 @@ const NewProduct = ({ onHide }) => {
                     <div className="form-group__child-group">
                         <div className="form-control">
                             <label htmlFor="volume-value">Volume value</label>
-                            <input type="number" min={1} id="volume-value" ref={volumeValueRef} />
+                            <input
+                                type="number"
+                                min={1}
+                                id="volume-value"
+                                defaultValue={volumeValue}
+                                ref={volumeValueRef}
+                            />
                         </div>
 
                         <div className="form-control">
@@ -179,7 +219,7 @@ const NewProduct = ({ onHide }) => {
                                 Volume{" "}
                                 <small style={{ textTransform: "none" }}>(L, ml, pc, can)</small>
                             </label>
-                            <input type="text" id="volume" ref={volumeRef} />
+                            <input type="text" id="volume" ref={volumeRef} defaultValue={volume} />
                         </div>
                     </div>
                 </div>
@@ -188,7 +228,9 @@ const NewProduct = ({ onHide }) => {
                     <button type="button" className="cancel-btn" onClick={onHide}>
                         Cancel
                     </button>
-                    <button type="submit"> Add Item</button>
+                    <button type="submit" style={{ textTransform: "capitalize" }}>
+                        {actionType} Item
+                    </button>
                 </div>
             </form>
         </div>

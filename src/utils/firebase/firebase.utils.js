@@ -1,7 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
-
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+
+import { v4 } from "uuid";
 
 import {
     doc,
@@ -13,6 +14,7 @@ import {
     getDocs,
     serverTimestamp,
     orderBy,
+    Timestamp,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -33,6 +35,9 @@ export const auth = getAuth();
 
 export const db = getFirestore();
 
+const formatDate = dateObj =>
+    `${dateObj.getDate()}/${dateObj.getMonth() + 1}/${dateObj.getFullYear()}`;
+
 export const getProductDocuments = async (collectionName = "cities") => {
     if (!collectionName) return;
 
@@ -44,12 +49,15 @@ export const getProductDocuments = async (collectionName = "cities") => {
     // const snapshot = await getDocs(collectionRef);
 
     return querySnapshot.docs?.map(docSnapshot => {
-        const createdDate = docSnapshot.data().created.toDate();
-        const created = `${createdDate.getDate()}/${
-            createdDate.getMonth() + 1
-        }/${createdDate.getFullYear()}`;
+        const createdFormattedDate = formatDate(docSnapshot.data().created.toDate());
+        const updatedFormattedDate = formatDate(docSnapshot.data().updated.toDate());
 
-        return { ...docSnapshot.data(), id: docSnapshot.id, created, updated: created };
+        return {
+            ...docSnapshot.data(),
+            id: docSnapshot.id,
+            created: createdFormattedDate,
+            updated: updatedFormattedDate,
+        };
     });
 };
 
@@ -67,6 +75,7 @@ export const getDataAndDocuments = async collectionName => {
 };
 
 export const addNewProduct = async (product, url) => {
+    console.log(product);
     if (!product) return;
 
     const response = await addDoc(collection(db, "cities"), {
@@ -80,18 +89,18 @@ export const addNewProduct = async (product, url) => {
     return response;
 };
 
-export const uploadNewProduct = (product, imgUpload) => {
-    if (!imgUpload) return;
+export const uploadNewProduct = (product, imgFileInput) => {
+    if (!imgFileInput) return;
 
     // ! upload the img first to storage to get the download url before adding the new product to firestore db
 
     const storage = getStorage();
-    const productImagesRef = ref(storage, `products/${imgUpload.name}`);
+    const productImagesRef = ref(storage, `products/${imgFileInput.name + v4()}`);
 
-    return uploadBytes(productImagesRef, imgUpload)
+    return uploadBytes(productImagesRef, imgFileInput)
         .then(snapshot => {
             return getDownloadURL(snapshot.ref).then(url => {
-                // console.log("image");
+                console.log(url);
                 return addNewProduct(product, url).then(res => ({
                     requestID: res.id,
                     imageUrl: url,
@@ -104,11 +113,47 @@ export const uploadNewProduct = (product, imgUpload) => {
         });
 };
 
-export const updateDocument = async (collectionName, product) => {
-    const { id, price } = product;
+export const updateDocument = async (collectionName, product, imgFileInput) => {
+    try {
+        let updatedProduct = product;
 
-    const documentRef = doc(db, collectionName, id);
-    return await updateDoc(documentRef, { price: price + 5 });
+        // check if img is "retain" or hasn't been changed
+        if (imgFileInput !== "retain") {
+            const storage = getStorage();
+            const productImagesRef = ref(storage, `products/${imgFileInput.name + v4()}`);
+
+            // const uploadResponseByte = await uploadBytes(productImagesRef, imgFileInput);
+            // const imgDownloadURL = await getDownloadURL(uploadResponseByte.ref).then(url => {
+            //     console.log(url);
+            // });
+
+            uploadBytes(productImagesRef, imgFileInput)
+                .then(snapshot => {
+                    return getDownloadURL(snapshot.ref).then(url => {
+                        console.log("UPLOADED: ", url);
+                        updatedProduct = { ...product, imageUrl: url };
+                    });
+                })
+                .catch(err => {
+                    console.log(err.message);
+                    return err.message;
+                });
+        }
+
+        const { id } = product;
+        const documentRef = doc(db, collectionName, id);
+        await updateDoc(documentRef, { ...product, updated: serverTimestamp() });
+
+        const dateObj = Timestamp.now().toDate();
+        const formattedDate = `${dateObj.getDate()}/${
+            dateObj.getMonth() + 1
+        }/${dateObj.getFullYear()}`;
+
+        return { ...updatedProduct, updated: formattedDate };
+    } catch (err) {
+        console.log(err);
+        return err;
+    }
 };
 
 // ! AUTH -------------------------------------------
