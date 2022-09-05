@@ -16,6 +16,7 @@ import {
     orderBy,
     Timestamp,
 } from "firebase/firestore";
+import { updateProduct } from "../../store/products/products-actions";
 
 const firebaseConfig = {
     apiKey: "AIzaSyC65-8IiVFbEwbuiCLV9KkHDhizPvwP_zY",
@@ -115,41 +116,40 @@ export const uploadNewProduct = (product, imgFileInput) => {
 
 export const updateDocument = async (collectionName, product, imgFileInput) => {
     try {
-        let updatedProduct = product;
+        const update = async imgDownloadURL => {
+            let updatedProduct = product;
 
-        // check if img is "retain" or hasn't been changed
+            if (imgDownloadURL) {
+                updateProduct = { ...updatedProduct, imageUrl: imgDownloadURL };
+            }
+
+            const { id } = product;
+            const documentRef = doc(db, collectionName, id);
+            await updateDoc(documentRef, { ...product, updated: serverTimestamp() });
+
+            const dateObj = Timestamp.now().toDate();
+            const formattedDate = `${dateObj.getDate()}/${
+                dateObj.getMonth() + 1
+            }/${dateObj.getFullYear()}`;
+
+            console.log("updatedProduct: ", updatedProduct);
+
+            return { ...updatedProduct, updated: formattedDate };
+        };
+
+        // check if img is "retain" or has been changed
         if (imgFileInput !== "retain") {
             const storage = getStorage();
             const productImagesRef = ref(storage, `products/${imgFileInput.name + v4()}`);
 
-            // const uploadResponseByte = await uploadBytes(productImagesRef, imgFileInput);
-            // const imgDownloadURL = await getDownloadURL(uploadResponseByte.ref).then(url => {
-            //     console.log(url);
-            // });
+            const uploadResponseByte = await uploadBytes(productImagesRef, imgFileInput);
+            const imgDownloadURL = await getDownloadURL(uploadResponseByte.ref);
+            console.log("imgDownloadURL: ", imgDownloadURL);
 
-            uploadBytes(productImagesRef, imgFileInput)
-                .then(snapshot => {
-                    return getDownloadURL(snapshot.ref).then(url => {
-                        console.log("UPLOADED: ", url);
-                        updatedProduct = { ...product, imageUrl: url };
-                    });
-                })
-                .catch(err => {
-                    console.log(err.message);
-                    return err.message;
-                });
+            return update(imgDownloadURL);
         }
 
-        const { id } = product;
-        const documentRef = doc(db, collectionName, id);
-        await updateDoc(documentRef, { ...product, updated: serverTimestamp() });
-
-        const dateObj = Timestamp.now().toDate();
-        const formattedDate = `${dateObj.getDate()}/${
-            dateObj.getMonth() + 1
-        }/${dateObj.getFullYear()}`;
-
-        return { ...updatedProduct, updated: formattedDate };
+        return update();
     } catch (err) {
         console.log(err);
         return err;

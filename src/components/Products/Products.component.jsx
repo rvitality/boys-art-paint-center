@@ -76,7 +76,6 @@ const Products = () => {
         <>
             {(showNewItemForm || currentProductEditExists) && (
                 <NewProduct
-                    currentProductEdit={currentProductEdit}
                     onHide={() => {
                         dispatch(setProductEdit({}));
                         setShowNewItemForm(false);
@@ -85,7 +84,7 @@ const Products = () => {
             )}
 
             <div className={`add-item-btn-container ${showNewItemForm ? "hide" : ""}`}>
-                {!currentProductEditExists && (
+                {!showNewItemForm && (
                     <button
                         onClick={() => {
                             setShowNewItemForm(true);

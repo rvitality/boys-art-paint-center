@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
+    selectCurrentEdit,
     selectUploadProductError,
     selectUploadProductStatus,
 } from "../../../store/products/products-selector";
@@ -9,8 +10,20 @@ import { updateProduct, uploadProduct } from "../../../store/products/products-a
 
 import imgPlaceholder from "../../../assets/images/img-placeholder.jpg";
 import "./NewProduct.styles.scss";
+import { useEffect } from "react";
+import { productsActions } from "../../../store/products/products-slice";
 
-const NewProduct = ({ currentProductEdit = {}, onHide }) => {
+const NewProduct = ({ onHide }) => {
+    const dispatch = useDispatch();
+
+    const currentProductEdit = useSelector(selectCurrentEdit);
+    console.log("currentProductEdit: ", currentProductEdit);
+
+    const actionType = Object.keys(currentProductEdit).length > 0 ? "edit" : "add";
+
+    const uploadProductStatus = useSelector(selectUploadProductStatus);
+    const uploadProductError = useSelector(selectUploadProductError);
+
     const {
         brand,
         color,
@@ -22,15 +35,6 @@ const NewProduct = ({ currentProductEdit = {}, onHide }) => {
         volume,
         volumeValue,
     } = currentProductEdit;
-
-    // console.log(currentProductEdit);
-
-    const actionType = Object.keys(currentProductEdit).length > 0 ? "edit" : "add";
-
-    const dispatch = useDispatch();
-
-    const uploadProductStatus = useSelector(selectUploadProductStatus);
-    const uploadProductError = useSelector(selectUploadProductError);
 
     const [imgFileInput, setImgFileInput] = useState(imageUrl);
     const [imgFileReaderInput, setImgFileReaderInput] = useState();
@@ -84,7 +88,7 @@ const NewProduct = ({ currentProductEdit = {}, onHide }) => {
             volumeValue,
         };
 
-        if (uploadProductStatus === "idle" && actionType === "add") {
+        if (actionType === "add") {
             dispatch(uploadProduct({ product, imgFileInput })).then(response => {
                 const { requestStatus } = response.meta;
                 if (requestStatus === "fulfilled") {
@@ -119,12 +123,12 @@ const NewProduct = ({ currentProductEdit = {}, onHide }) => {
         }
     };
 
-    const uploadProductStatusMessage =
+    let uploadProductStatusMessage =
         uploadProductStatus === "succeeded"
             ? "Product added successfully."
             : uploadProductError.message;
 
-    console.log("uploadProductStatusMessage: ", uploadProductStatusMessage);
+    useEffect(() => {}, []);
 
     let productStyleDisplayImg;
     if (imgFileReaderInput) {
@@ -225,11 +229,25 @@ const NewProduct = ({ currentProductEdit = {}, onHide }) => {
                 </div>
 
                 <div className="action-buttons">
-                    <button type="button" className="cancel-btn" onClick={onHide}>
+                    <button
+                        type="button"
+                        className="cancel-btn"
+                        onClick={() => {
+                            onHide();
+                            dispatch(productsActions.resetUploadProductStatus());
+                        }}
+                    >
                         Cancel
                     </button>
-                    <button type="submit" style={{ textTransform: "capitalize" }}>
-                        {actionType} Item
+
+                    <button
+                        type="submit"
+                        disabled={uploadProductStatus === "loading"}
+                        style={{ textTransform: "capitalize" }}
+                    >
+                        {uploadProductStatus === "loading"
+                            ? "Please wait..."
+                            : `${actionType} Item`}
                     </button>
                 </div>
             </form>

@@ -22,6 +22,9 @@ const productsSlice = createSlice({
         setCurrentEdit(state, action) {
             state.currentEdit = action.payload;
         },
+        resetUploadProductStatus(state, action) {
+            state.uploadProductStatus = "idle";
+        },
     },
     extraReducers(builder) {
         builder

@@ -21,19 +21,7 @@ const ProductsTable = ({ dataToDisplay: productsToDisplay }) => {
     const sortHandler = sortedData => setProducts(sortedData);
 
     const updateProductHandler = product => {
-        console.log(product);
         dispatch(setProductEdit(product));
-
-        // await updateDocument("cities", product)
-
-        // console.log("here");
-        // currentProductEdit.setCurrentProductEdit(prevState => ({
-        //     ...prevState,
-        //     data: product,
-        //     showForm: true,
-        //     dog: true,
-        // }));
-        // await updateDocument("cities", product);
     };
 
     return (
