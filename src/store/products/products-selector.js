@@ -34,3 +34,13 @@ export const selectUploadProductError = createSelector(
 
 // ! EDIT PRODUCT ---------------------------------------
 export const selectCurrentEdit = state => state.products.currentEdit;
+
+export const selectUpdateProductStatus = createSelector(
+    [selectProductsData],
+    productsSlice => productsSlice.updateProductStatus
+);
+
+export const selectUpdateProductError = createSelector(
+    [selectProductsData],
+    productsSlice => productsSlice.updateProductError
+);

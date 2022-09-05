@@ -83,8 +83,8 @@ const Products = () => {
                 />
             )}
 
-            <div className={`add-item-btn-container ${showNewItemForm ? "hide" : ""}`}>
-                {!showNewItemForm && (
+            <div className="add-item-btn-container">
+                {!showNewItemForm && !currentProductEditExists ? (
                     <button
                         onClick={() => {
                             setShowNewItemForm(true);
@@ -93,6 +93,8 @@ const Products = () => {
                     >
                         Add New
                     </button>
+                ) : (
+                    ""
                 )}
             </div>
 

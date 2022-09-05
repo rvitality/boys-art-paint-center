@@ -115,24 +115,22 @@ export const uploadNewProduct = (product, imgFileInput) => {
 };
 
 export const updateDocument = async (collectionName, product, imgFileInput) => {
+    let updatedProduct = product;
+
     try {
         const update = async imgDownloadURL => {
-            let updatedProduct = product;
-
             if (imgDownloadURL) {
-                updateProduct = { ...updatedProduct, imageUrl: imgDownloadURL };
+                updatedProduct = { ...updatedProduct, imageUrl: imgDownloadURL };
             }
 
-            const { id } = product;
+            const { id } = updatedProduct;
             const documentRef = doc(db, collectionName, id);
-            await updateDoc(documentRef, { ...product, updated: serverTimestamp() });
+            await updateDoc(documentRef, { ...updatedProduct, updated: serverTimestamp() });
 
             const dateObj = Timestamp.now().toDate();
             const formattedDate = `${dateObj.getDate()}/${
                 dateObj.getMonth() + 1
             }/${dateObj.getFullYear()}`;
-
-            console.log("updatedProduct: ", updatedProduct);
 
             return { ...updatedProduct, updated: formattedDate };
         };
@@ -146,10 +144,12 @@ export const updateDocument = async (collectionName, product, imgFileInput) => {
             const imgDownloadURL = await getDownloadURL(uploadResponseByte.ref);
             console.log("imgDownloadURL: ", imgDownloadURL);
 
-            return update(imgDownloadURL);
+            const product = await update(imgDownloadURL);
+            return product;
         }
 
-        return update();
+        const product = await update();
+        return product;
     } catch (err) {
         console.log(err);
         return err;

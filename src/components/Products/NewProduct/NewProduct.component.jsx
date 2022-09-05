@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 import {
     selectCurrentEdit,
+    selectUpdateProductError,
+    selectUpdateProductStatus,
     selectUploadProductError,
     selectUploadProductStatus,
 } from "../../../store/products/products-selector";
@@ -10,7 +12,6 @@ import { updateProduct, uploadProduct } from "../../../store/products/products-a
 
 import imgPlaceholder from "../../../assets/images/img-placeholder.jpg";
 import "./NewProduct.styles.scss";
-import { useEffect } from "react";
 import { productsActions } from "../../../store/products/products-slice";
 
 const NewProduct = ({ onHide }) => {
@@ -23,6 +24,10 @@ const NewProduct = ({ onHide }) => {
 
     const uploadProductStatus = useSelector(selectUploadProductStatus);
     const uploadProductError = useSelector(selectUploadProductError);
+
+    const updateProductStatus = useSelector(selectUpdateProductStatus);
+    console.log(updateProductStatus);
+    const updateProductError = useSelector(selectUpdateProductError);
 
     const {
         brand,
@@ -65,6 +70,11 @@ const NewProduct = ({ onHide }) => {
         fileReader.readAsDataURL(file);
     };
 
+    const hideFormHandler = () => {
+        onHide();
+        dispatch(productsActions.resetUploadProductStatus());
+    };
+
     const submitHandler = e => {
         e.preventDefault();
 
@@ -101,6 +111,8 @@ const NewProduct = ({ onHide }) => {
                     volumeValueRef.current.value = "";
                     volumeRef.current.value = "";
                     setImgFileReaderInput("");
+
+                    hideFormHandler();
                 }
             });
         } else if (actionType === "edit") {
@@ -108,27 +120,14 @@ const NewProduct = ({ onHide }) => {
 
             // check if img has been changed
             if (imageUrl !== imgFileInput) {
-                dispatch(updateProduct({ product: newEditProduct, imgFileInput })).then(
-                    response => {
-                        console.log("response: ", response);
-                    }
-                );
+                dispatch(updateProduct({ product: newEditProduct, imgFileInput }));
+                hideFormHandler();
             } else {
-                dispatch(updateProduct({ product: newEditProduct, imgFileInput: "retain" })).then(
-                    response => {
-                        console.log("response: ", response);
-                    }
-                );
+                dispatch(updateProduct({ product: newEditProduct, imgFileInput: "retain" }));
+                hideFormHandler();
             }
         }
     };
-
-    let uploadProductStatusMessage =
-        uploadProductStatus === "succeeded"
-            ? "Product added successfully."
-            : uploadProductError.message;
-
-    useEffect(() => {}, []);
 
     let productStyleDisplayImg;
     if (imgFileReaderInput) {
@@ -141,11 +140,11 @@ const NewProduct = ({ onHide }) => {
 
     return (
         <div className="new-item-container" id="new-product">
-            {uploadProductStatus && (
+            {/* {uploadProductStatus && (
                 <div className={`request-status-msg  ${uploadProductStatus}`}>
                     <p>{uploadProductStatusMessage}</p>
                 </div>
-            )}
+            )} */}
 
             <form onSubmit={submitHandler}>
                 <div
@@ -229,25 +228,24 @@ const NewProduct = ({ onHide }) => {
                 </div>
 
                 <div className="action-buttons">
-                    <button
-                        type="button"
-                        className="cancel-btn"
-                        onClick={() => {
-                            onHide();
-                            dispatch(productsActions.resetUploadProductStatus());
-                        }}
-                    >
+                    <button type="button" className="cancel-btn" onClick={hideFormHandler}>
                         Cancel
                     </button>
 
-                    <button
+                    {/* <button
                         type="submit"
-                        disabled={uploadProductStatus === "loading"}
+                        disabled={
+                            uploadProductStatus === "loading" || updateProductStatus === "loading"
+                        }
                         style={{ textTransform: "capitalize" }}
                     >
-                        {uploadProductStatus === "loading"
+                        {uploadProductStatus === "loading" || updateProductStatus === "loading"
                             ? "Please wait..."
                             : `${actionType} Item`}
+                    </button> */}
+
+                    <button type="submit" style={{ textTransform: "capitalize" }}>
+                        {actionType} Item
                     </button>
                 </div>
             </form>
