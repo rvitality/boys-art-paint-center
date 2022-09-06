@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import Resizer from "react-image-file-resizer";
 import {
     selectCurrentEdit,
     selectUpdateProductError,
@@ -53,12 +54,32 @@ const NewProduct = ({ onHide }) => {
 
     const fileReader = new FileReader();
 
-    const imgChangeHandler = e => {
-        const file = e.target.files[0];
+    const resizeFile = file =>
+        new Promise(resolve => {
+            Resizer.imageFileResizer(
+                file,
+                250,
+                250,
+                "PNG",
+                50,
+                0,
+                uri => {
+                    resolve(uri);
+                },
+                "file"
+            );
+        });
 
+    const imgChangeHandler = async e => {
+        const file = e.target.files[0];
         if (!file) return;
 
-        setImgFileInput(file);
+        try {
+            const image = await resizeFile(file);
+            setImgFileInput(image);
+        } catch (err) {
+            console.log(err);
+        }
 
         fileReader.onload = e => {
             const { result } = e.target;
@@ -127,13 +148,11 @@ const NewProduct = ({ onHide }) => {
         }
     };
 
-    let productStyleDisplayImg;
+    let productStyleDisplayImg = imgPlaceholder;
     if (imgFileReaderInput) {
         productStyleDisplayImg = imgFileReaderInput;
     } else if (imageUrl) {
         productStyleDisplayImg = imageUrl;
-    } else {
-        productStyleDisplayImg = imgPlaceholder;
     }
 
     return (
