@@ -7,7 +7,7 @@ import { MdDelete } from "react-icons/md";
 
 import "./ProductsTable.styles.scss";
 import { useDispatch } from "react-redux";
-import { setProductEdit } from "../../../store/products/products-actions";
+import { deleteProduct, setProductEdit } from "../../../store/products/products-actions";
 
 const ProductsTable = ({ dataToDisplay: productsToDisplay }) => {
     const dispatch = useDispatch();
@@ -22,6 +22,10 @@ const ProductsTable = ({ dataToDisplay: productsToDisplay }) => {
 
     const updateProductHandler = product => {
         dispatch(setProductEdit(product));
+    };
+
+    const deleteProductHandler = product => {
+        dispatch(deleteProduct({ product }));
     };
 
     return (
@@ -132,9 +136,13 @@ const ProductsTable = ({ dataToDisplay: productsToDisplay }) => {
                                     >
                                         <TiEdit />
                                     </a>
-                                    <a href="#" title="Delete" className="actions__del">
+                                    <button
+                                        title="Delete"
+                                        onClick={deleteProductHandler.bind(null, product)}
+                                        className="actions__del"
+                                    >
                                         <MdDelete />
-                                    </a>
+                                    </button>
                                 </div>
                             </td>
                         </tr>

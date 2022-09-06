@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchProducts, uploadProduct, updateProduct } from "./products-actions";
+import { fetchProducts, uploadProduct, updateProduct, deleteProduct } from "./products-actions";
 
 const initialState = {
     productItems: [],
@@ -13,6 +13,9 @@ const initialState = {
 
     updateProductStatus: "idle",
     updateProductError: {},
+
+    deleteProductStatus: "idle",
+    deleteProductError: {},
 };
 
 const productsSlice = createSlice({
@@ -32,6 +35,7 @@ const productsSlice = createSlice({
                 state.fetchProductsStatus = "loading";
             })
             .addCase(fetchProducts.fulfilled, (state, action) => {
+                console.log(action.payload);
                 state.fetchProductsStatus = "succeeded";
                 state.productItems = action.payload;
             })
@@ -76,12 +80,31 @@ const productsSlice = createSlice({
 
                     return product;
                 });
-
-                console.log();
             })
             .addCase(updateProduct.rejected, (state, action) => {
                 state.updateProductStatus = "failed";
                 state.updateProductError = {
+                    title: "Error!",
+                    message: "Something went wrong.",
+                };
+                // message: action.payload || "Something went wrong!",
+            })
+
+            .addCase(deleteProduct.pending, (state, action) => {
+                state.deleteProductStatus = "loading";
+            })
+            .addCase(deleteProduct.fulfilled, (state, action) => {
+                state.deleteProductStatus = "succeeded";
+
+                const deleteProduct = action.payload;
+
+                state.productItems = state.productItems.filter(product => {
+                    return product.id !== deleteProduct.id;
+                });
+            })
+            .addCase(deleteProduct.rejected, (state, action) => {
+                state.deleteProductStatus = "failed";
+                state.deleteProductError = {
                     title: "Error!",
                     message: "Something went wrong.",
                 };

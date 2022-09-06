@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
+    deleteDocument,
     getProductDocuments,
     updateDocument,
     uploadNewProduct,
@@ -11,6 +12,7 @@ export const fetchProducts = createAsyncThunk(
     async (collectionName = "cities", { rejectWithValue }) => {
         try {
             const response = await getProductDocuments(collectionName);
+            console.log(response);
             return response;
         } catch (error) {
             console.error(error);
@@ -28,9 +30,9 @@ export const uploadProduct = createAsyncThunk(
     async ({ product, imgFileInput }, { rejectWithValue }) => {
         try {
             const response = await uploadNewProduct(product, imgFileInput);
-            const { requestID, imageUrl } = response;
+            const { requestID, imageUrl, imageName } = response;
 
-            return { ...product, id: requestID, imageUrl };
+            return { ...product, id: requestID, imageUrl, imageName };
         } catch (error) {
             console.log(error);
             const message =
@@ -50,6 +52,19 @@ export const updateProduct = createAsyncThunk(
         try {
             const response = await updateDocument(collectionName, product, imgFileInput);
             return response;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+);
+
+export const deleteProduct = createAsyncThunk(
+    "products/deleteProduct",
+    async ({ collectionName = "cities", product }) => {
+        try {
+            const response = await deleteDocument(collectionName, product);
+            console.log(response);
+            return product;
         } catch (err) {
             console.log(err);
         }

@@ -1,8 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-
-import { v4 } from "uuid";
+import { getDownloadURL, getStorage, ref, uploadBytes, deleteObject } from "firebase/storage";
 
 import {
     doc,
@@ -15,8 +13,8 @@ import {
     serverTimestamp,
     orderBy,
     Timestamp,
+    deleteDoc,
 } from "firebase/firestore";
-import { updateProduct } from "../../store/products/products-actions";
 
 const firebaseConfig = {
     apiKey: "AIzaSyC65-8IiVFbEwbuiCLV9KkHDhizPvwP_zY",
@@ -34,10 +32,14 @@ const firebaseApp = initializeApp(firebaseConfig);
 
 export const auth = getAuth();
 
+const storage = getStorage();
+
 export const db = getFirestore();
 
 const formatDate = dateObj =>
     `${dateObj.getDate()}/${dateObj.getMonth() + 1}/${dateObj.getFullYear()}`;
+
+// ! FETCH ------------------------------------------
 
 export const getProductDocuments = async (collectionName = "cities") => {
     if (!collectionName) return;
@@ -75,6 +77,8 @@ export const getDataAndDocuments = async collectionName => {
     return querySnapshot.docs?.map(docSnapshot => docSnapshot.data());
 };
 
+// ! ADD ------------------------------------------
+
 export const addNewProduct = async (product, url) => {
     console.log(product);
     if (!product) return;
@@ -96,15 +100,17 @@ export const uploadNewProduct = (product, imgFileInput) => {
     // ! upload the img first to storage to get the download url before adding the new product to firestore db
 
     const storage = getStorage();
-    const productImagesRef = ref(storage, `products/${imgFileInput.name + v4()}`);
+    const productImagesRef = ref(storage, `products/${imgFileInput.name}`);
 
     return uploadBytes(productImagesRef, imgFileInput)
         .then(snapshot => {
             return getDownloadURL(snapshot.ref).then(url => {
-                console.log(url);
-                return addNewProduct(product, url).then(res => ({
+                const newProduct = { ...product, imageName: imgFileInput.name };
+
+                return addNewProduct(newProduct, url).then(res => ({
                     requestID: res.id,
                     imageUrl: url,
+                    imageName: imgFileInput.name,
                 }));
             });
         })
@@ -114,13 +120,15 @@ export const uploadNewProduct = (product, imgFileInput) => {
         });
 };
 
+// ! UPDATE ------------------------------------------
+
 export const updateDocument = async (collectionName, product, imgFileInput) => {
     let updatedProduct = product;
 
     try {
-        const update = async imgDownloadURL => {
+        const update = async (imgDownloadURL, imageName) => {
             if (imgDownloadURL) {
-                updatedProduct = { ...updatedProduct, imageUrl: imgDownloadURL };
+                updatedProduct = { ...updatedProduct, imageUrl: imgDownloadURL, imageName };
             }
 
             const { id } = updatedProduct;
@@ -138,13 +146,12 @@ export const updateDocument = async (collectionName, product, imgFileInput) => {
         // check if img is "retain" or has been changed
         if (imgFileInput !== "retain") {
             const storage = getStorage();
-            const productImagesRef = ref(storage, `products/${imgFileInput.name + v4()}`);
+            const productImagesRef = ref(storage, `products/${imgFileInput.name}`);
 
             const uploadResponseByte = await uploadBytes(productImagesRef, imgFileInput);
             const imgDownloadURL = await getDownloadURL(uploadResponseByte.ref);
-            console.log("imgDownloadURL: ", imgDownloadURL);
 
-            const product = await update(imgDownloadURL);
+            const product = await update(imgDownloadURL, imgFileInput.name);
             return product;
         }
 
@@ -154,6 +161,29 @@ export const updateDocument = async (collectionName, product, imgFileInput) => {
         console.log(err);
         return err;
     }
+};
+
+// ! DELETE ------------------------------------------
+export const deleteDocument = async (collectionName, product) => {
+    // delete img from storage
+    const imageRef = ref(storage, `products/${product.imageName}`);
+    console.log(product);
+    console.log(imageRef);
+
+    // Delete the file
+    deleteObject(imageRef)
+        .then(() => {
+            // File deleted successfully
+            console.log("Image from storage deleted susccessfully.");
+        })
+        .catch(error => {
+            // Uh-oh, an error occurred!
+            console.log("Error! Image hasn't been deleted.");
+        });
+
+    const productsDoc = doc(db, collectionName, product.id);
+    const res = await deleteDoc(productsDoc);
+    return res;
 };
 
 // ! AUTH -------------------------------------------

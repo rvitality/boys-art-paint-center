@@ -18,7 +18,6 @@ const NewProduct = ({ onHide }) => {
     const dispatch = useDispatch();
 
     const currentProductEdit = useSelector(selectCurrentEdit);
-    console.log("currentProductEdit: ", currentProductEdit);
 
     const actionType = Object.keys(currentProductEdit).length > 0 ? "edit" : "add";
 
@@ -26,7 +25,6 @@ const NewProduct = ({ onHide }) => {
     const uploadProductError = useSelector(selectUploadProductError);
 
     const updateProductStatus = useSelector(selectUpdateProductStatus);
-    console.log(updateProductStatus);
     const updateProductError = useSelector(selectUpdateProductError);
 
     const {
