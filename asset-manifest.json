@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/boys-art-paint-center-delivery/static/css/main.7ef9e45c.css",
-    "main.js": "/boys-art-paint-center-delivery/static/js/main.175b9a23.js",
+    "main.js": "/boys-art-paint-center-delivery/static/js/main.691d5fd0.js",
     "static/js/787.ff623666.chunk.js": "/boys-art-paint-center-delivery/static/js/787.ff623666.chunk.js",
     "index.html": "/boys-art-paint-center-delivery/index.html",
     "main.7ef9e45c.css.map": "/boys-art-paint-center-delivery/static/css/main.7ef9e45c.css.map",
-    "main.175b9a23.js.map": "/boys-art-paint-center-delivery/static/js/main.175b9a23.js.map",
+    "main.691d5fd0.js.map": "/boys-art-paint-center-delivery/static/js/main.691d5fd0.js.map",
     "787.ff623666.chunk.js.map": "/boys-art-paint-center-delivery/static/js/787.ff623666.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.7ef9e45c.css",
-    "static/js/main.175b9a23.js"
+    "static/js/main.691d5fd0.js"
   ]
 }
