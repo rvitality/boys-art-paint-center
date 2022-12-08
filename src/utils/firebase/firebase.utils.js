@@ -41,7 +41,7 @@ const formatDate = dateObj =>
 
 // ! FETCH ------------------------------------------
 
-export const getProductDocuments = async (collectionName = "cities") => {
+export const getProductDocuments = async (collectionName = "products") => {
     if (!collectionName) return;
 
     const collectionRef = collection(db, collectionName);
@@ -52,8 +52,13 @@ export const getProductDocuments = async (collectionName = "cities") => {
     // const snapshot = await getDocs(collectionRef);
 
     return querySnapshot.docs?.map(docSnapshot => {
-        const createdFormattedDate = formatDate(docSnapshot.data().created.toDate());
-        const updatedFormattedDate = formatDate(docSnapshot.data().updated.toDate());
+        // const createdFormattedDate = formatDate(docSnapshot.data().created.toDate());
+        // const updatedFormattedDate = formatDate(docSnapshot.data().updated.toDate());
+
+        const { created, updated } = docSnapshot.data();
+
+        const createdFormattedDate = formatDate(new Date(created * 1000));
+        const updatedFormattedDate = formatDate(new Date(updated * 1000));
 
         return {
             ...docSnapshot.data(),
@@ -85,8 +90,8 @@ export const addNewProduct = async (product, url) => {
 
     const response = await addDoc(collection(db, "cities"), {
         imageUrl: url,
-        created: serverTimestamp(),
-        updated: serverTimestamp(),
+        created: Timestamp.now().seconds,
+        updated: Timestamp.now().seconds,
         ...product,
     });
 
@@ -133,14 +138,17 @@ export const updateDocument = async (collectionName, product, imgFileInput) => {
 
             const { id } = updatedProduct;
             const documentRef = doc(db, collectionName, id);
-            await updateDoc(documentRef, { ...updatedProduct, updated: serverTimestamp() });
 
-            const dateObj = Timestamp.now().toDate();
-            const formattedDate = `${dateObj.getDate()}/${
-                dateObj.getMonth() + 1
-            }/${dateObj.getFullYear()}`;
+            await updateDoc(documentRef, { ...updatedProduct, updated: Timestamp.now().seconds });
 
-            return { ...updatedProduct, updated: formattedDate };
+            console.log();
+
+            // const dateObj = Timestamp.now().toDate();
+            // const formattedDate = `${dateObj.getDate()}/${
+            //     dateObj.getMonth() + 1
+            // }/${dateObj.getFullYear()}`;
+
+            return { ...updatedProduct, updated: Timestamp.now().seconds };
         };
 
         // check if img is "retain" or has been changed
