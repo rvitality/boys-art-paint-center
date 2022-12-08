@@ -9,10 +9,9 @@ import { productsActions } from "./products-slice";
 
 export const fetchProducts = createAsyncThunk(
     "products/fetchProducts",
-    async (collectionName = "cities", { rejectWithValue }) => {
+    async (collectionName = "products", { rejectWithValue }) => {
         try {
             const response = await getProductDocuments(collectionName);
-            console.log(response);
             return response;
         } catch (error) {
             console.error(error);
@@ -48,7 +47,7 @@ export const setProductEdit = product => productsActions.setCurrentEdit(product)
 
 export const updateProduct = createAsyncThunk(
     "products/updateProduct",
-    async ({ collectionName = "cities", product, imgFileInput }) => {
+    async ({ collectionName = "products", product, imgFileInput }) => {
         try {
             const response = await updateDocument(collectionName, product, imgFileInput);
             return response;
@@ -60,7 +59,7 @@ export const updateProduct = createAsyncThunk(
 
 export const deleteProduct = createAsyncThunk(
     "products/deleteProduct",
-    async ({ collectionName = "cities", product }) => {
+    async ({ collectionName = "products", product }) => {
         try {
             const response = await deleteDocument(collectionName, product);
             console.log(response);
