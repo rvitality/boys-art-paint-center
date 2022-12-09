@@ -12,10 +12,10 @@ const App = () => {
 
     return (
         <Routes>
-            <Route path="/boys-art-paint-center-delivery" element={<Auth />} />
+            <Route path="/" element={<Auth />} />
 
             <Route
-                path="/boys-art-paint-center-delivery/*"
+                path="/*"
                 element={
                     authContext.isLoggedIn ? (
                         <Layout />
@@ -26,14 +26,8 @@ const App = () => {
             />
 
             <Route
-                path="/boys-art-paint-center-delivery/profile"
-                element={
-                    authContext.isLoggedIn ? (
-                        <Profile />
-                    ) : (
-                        <Navigate to="/boys-art-paint-center-delivery" />
-                    )
-                }
+                path="/profile"
+                element={authContext.isLoggedIn ? <Profile /> : <Navigate to="/" />}
             />
 
             <Route
