@@ -7,10 +7,13 @@ import "./Layout.styles.scss";
 
 const Layout = props => {
     return (
+        <>
+        <Header />
+        
         <main className="main">
-            <Header />
             <DataPreview />
         </main>
+        </>
     );
 };
 
